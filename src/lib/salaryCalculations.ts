@@ -35,16 +35,14 @@ const SOLIDARITY_BRACKETS = [
   { limit: Infinity, rate: 0.10 },
 ];
 
-// Tax credit for salaried employees
+// Tax credit for salaried employees (2024)
+// 777€ for income ≤ 12,000€, decreases linearly to 0€ at 36,000€
 function getTaxCredit(annualIncome: number): number {
   if (annualIncome <= 12000) {
     return 777;
-  } else if (annualIncome <= 20000) {
-    return 777 - (annualIncome - 12000) * 0.04625;
-  } else if (annualIncome <= 30000) {
-    return 407 - (annualIncome - 20000) * 0.02575;
-  } else if (annualIncome <= 40000) {
-    return 149.50 - (annualIncome - 30000) * 0.01495;
+  } else if (annualIncome < 36000) {
+    // Linear decrease: 777 at 12,000€ → 0 at 36,000€
+    return Math.max(0, 777 - (annualIncome - 12000) * (777 / 24000));
   }
   return 0;
 }
