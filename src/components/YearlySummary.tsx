@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CalendarDays, PiggyBank, Receipt, FileText, Trash2, Plus } from 'lucide-react';
+import { CalendarDays, PiggyBank, Receipt, FileText, Trash2, Plus, Users, Pencil, Check, X } from 'lucide-react';
 import { calculateYearlySummary, formatCurrency, GREEK_MONTHS, type YearlySummary as YearlySummaryType } from '@/lib/salaryCalculations';
 
 interface MonthlySalary {
@@ -15,7 +15,18 @@ export function YearlySummary() {
   const [salaries, setSalaries] = useState<MonthlySalary[]>([]);
   const [selectedMonth, setSelectedMonth] = useState<string>(GREEK_MONTHS[0]);
   const [grossAmount, setGrossAmount] = useState<string>('');
+  const [children, setChildren] = useState<number>(0);
   const [summary, setSummary] = useState<YearlySummaryType | null>(null);
+  const [editingIndex, setEditingIndex] = useState<number | null>(null);
+  const [editValue, setEditValue] = useState<string>('');
+
+  const recalculateSummary = (newSalaries: MonthlySalary[]) => {
+    if (newSalaries.length > 0) {
+      setSummary(calculateYearlySummary(newSalaries, children));
+    } else {
+      setSummary(null);
+    }
+  };
 
   const addSalary = () => {
     const gross = parseFloat(grossAmount);
@@ -23,22 +34,14 @@ export function YearlySummary() {
       const newSalaries = [...salaries, { month: selectedMonth, gross }];
       setSalaries(newSalaries);
       setGrossAmount('');
-      
-      // Recalculate summary
-      if (newSalaries.length > 0) {
-        setSummary(calculateYearlySummary(newSalaries));
-      }
+      recalculateSummary(newSalaries);
     }
   };
 
   const removeSalary = (index: number) => {
     const newSalaries = salaries.filter((_, i) => i !== index);
     setSalaries(newSalaries);
-    if (newSalaries.length > 0) {
-      setSummary(calculateYearlySummary(newSalaries));
-    } else {
-      setSummary(null);
-    }
+    recalculateSummary(newSalaries);
   };
 
   const fillWithSameSalary = () => {
@@ -46,7 +49,36 @@ export function YearlySummary() {
     if (!isNaN(gross) && gross > 0) {
       const allSalaries = GREEK_MONTHS.map(month => ({ month, gross }));
       setSalaries(allSalaries);
-      setSummary(calculateYearlySummary(allSalaries));
+      recalculateSummary(allSalaries);
+    }
+  };
+
+  const startEditing = (index: number) => {
+    setEditingIndex(index);
+    setEditValue(salaries[index].gross.toString());
+  };
+
+  const cancelEditing = () => {
+    setEditingIndex(null);
+    setEditValue('');
+  };
+
+  const saveEdit = (index: number) => {
+    const gross = parseFloat(editValue);
+    if (!isNaN(gross) && gross > 0) {
+      const newSalaries = [...salaries];
+      newSalaries[index] = { ...newSalaries[index], gross };
+      setSalaries(newSalaries);
+      recalculateSummary(newSalaries);
+    }
+    setEditingIndex(null);
+    setEditValue('');
+  };
+
+  const handleChildrenChange = (newChildren: number) => {
+    setChildren(newChildren);
+    if (salaries.length > 0) {
+      setSummary(calculateYearlySummary(salaries, newChildren));
     }
   };
 
@@ -62,7 +94,7 @@ export function YearlySummary() {
       <CardContent className="space-y-6">
         {/* Input Form */}
         <div className="grid gap-4 p-4 bg-muted/30 rounded-xl">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
               <Label htmlFor="month">Μήνας</Label>
               <select
@@ -89,6 +121,24 @@ export function YearlySummary() {
                 onKeyDown={(e) => e.key === 'Enter' && addSalary()}
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="children-yearly" className="flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Τέκνα
+              </Label>
+              <select
+                id="children-yearly"
+                value={children}
+                onChange={(e) => handleChildrenChange(parseInt(e.target.value))}
+                className="w-full h-10 px-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                  <option key={num} value={num}>
+                    {num === 0 ? 'Χωρίς' : num}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
           <div className="flex gap-2">
             <Button onClick={addSalary} className="flex-1" size="lg">
@@ -107,22 +157,61 @@ export function YearlySummary() {
             <h4 className="font-semibold text-foreground flex items-center gap-2">
               <Receipt className="w-4 h-4" />
               Καταχωρημένοι Μισθοί ({salaries.length})
+              <span className="text-xs text-muted-foreground font-normal ml-2">
+                (κλικ στο μολύβι για επεξεργασία)
+              </span>
             </h4>
-            <div className="max-h-48 overflow-y-auto space-y-1 pr-2">
+            <div className="max-h-64 overflow-y-auto space-y-1 pr-2">
               {salaries.map((salary, index) => (
                 <div
                   key={index}
                   className="flex justify-between items-center py-2 px-3 bg-muted/50 rounded-lg group hover:bg-muted transition-colors"
                 >
                   <span className="text-sm text-foreground">{salary.month}</span>
-                  <div className="flex items-center gap-3">
-                    <span className="font-medium text-foreground">{formatCurrency(salary.gross)}</span>
-                    <button
-                      onClick={() => removeSalary(index)}
-                      className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive/80"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
+                  <div className="flex items-center gap-2">
+                    {editingIndex === index ? (
+                      <>
+                        <Input
+                          type="number"
+                          value={editValue}
+                          onChange={(e) => setEditValue(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') saveEdit(index);
+                            if (e.key === 'Escape') cancelEditing();
+                          }}
+                          className="w-24 h-8 text-sm"
+                          autoFocus
+                        />
+                        <button
+                          onClick={() => saveEdit(index)}
+                          className="text-secondary hover:text-secondary/80 p-1"
+                        >
+                          <Check className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={cancelEditing}
+                          className="text-destructive hover:text-destructive/80 p-1"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <span className="font-medium text-foreground">{formatCurrency(salary.gross)}</span>
+                        <button
+                          onClick={() => startEditing(index)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground p-1"
+                        >
+                          <Pencil className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => removeSalary(index)}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive/80 p-1"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </>
+                    )}
                   </div>
                 </div>
               ))}

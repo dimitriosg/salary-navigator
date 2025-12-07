@@ -4,26 +4,27 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Calculator, ArrowRightLeft, TrendingUp, TrendingDown } from 'lucide-react';
+import { Calculator, ArrowRightLeft, TrendingUp, TrendingDown, Users } from 'lucide-react';
 import { calculateGrossToNet, calculateNetToGross, formatCurrency, type SalaryBreakdown } from '@/lib/salaryCalculations';
 
 export function SalaryCalculator() {
   const [grossInput, setGrossInput] = useState<string>('');
   const [netInput, setNetInput] = useState<string>('');
+  const [children, setChildren] = useState<number>(0);
   const [grossResult, setGrossResult] = useState<SalaryBreakdown | null>(null);
   const [netResult, setNetResult] = useState<SalaryBreakdown | null>(null);
 
   const handleGrossToNet = () => {
     const gross = parseFloat(grossInput);
     if (!isNaN(gross) && gross > 0) {
-      setGrossResult(calculateGrossToNet(gross));
+      setGrossResult(calculateGrossToNet(gross, 14, children));
     }
   };
 
   const handleNetToGross = () => {
     const net = parseFloat(netInput);
     if (!isNaN(net) && net > 0) {
-      setNetResult(calculateNetToGross(net));
+      setNetResult(calculateNetToGross(net, 14, children));
     }
   };
 
@@ -110,6 +111,24 @@ export function SalaryCalculator() {
                 className="text-lg h-12"
               />
             </div>
+            <div className="space-y-2">
+              <Label htmlFor="children-gross" className="flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Αριθμός Τέκνων
+              </Label>
+              <select
+                id="children-gross"
+                value={children}
+                onChange={(e) => setChildren(parseInt(e.target.value))}
+                className="w-full h-10 px-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                  <option key={num} value={num}>
+                    {num === 0 ? 'Χωρίς τέκνα' : `${num} ${num === 1 ? 'τέκνο' : 'τέκνα'}`}
+                  </option>
+                ))}
+              </select>
+            </div>
             <Button onClick={handleGrossToNet} className="w-full" size="lg">
               <ArrowRightLeft className="w-5 h-5 mr-2" />
               Υπολογισμός Καθαρού
@@ -129,6 +148,24 @@ export function SalaryCalculator() {
                 onKeyDown={(e) => e.key === 'Enter' && handleNetToGross()}
                 className="text-lg h-12"
               />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="children-net" className="flex items-center gap-2">
+                <Users className="w-4 h-4" />
+                Αριθμός Τέκνων
+              </Label>
+              <select
+                id="children-net"
+                value={children}
+                onChange={(e) => setChildren(parseInt(e.target.value))}
+                className="w-full h-10 px-3 rounded-lg border border-input bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+              >
+                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+                  <option key={num} value={num}>
+                    {num === 0 ? 'Χωρίς τέκνα' : `${num} ${num === 1 ? 'τέκνο' : 'τέκνα'}`}
+                  </option>
+                ))}
+              </select>
             </div>
             <Button onClick={handleNetToGross} variant="secondary" className="w-full" size="lg">
               <ArrowRightLeft className="w-5 h-5 mr-2" />
