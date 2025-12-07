@@ -48,7 +48,7 @@ export function SalaryCalculator() {
         <h4 className="font-semibold text-foreground mb-3">Ανάλυση Κρατήσεων</h4>
         <div className="space-y-2">
           <div className="flex justify-between items-center py-2 px-3 rounded-lg bg-muted/50">
-            <span className="text-sm text-muted-foreground">ΕΦΚΑ Εργαζομένου (13.40%)</span>
+            <span className="text-sm text-muted-foreground">ΕΦΚΑ Εργαζομένου (13.37%)</span>
             <span className="font-medium text-destructive">-{formatCurrency(breakdown.efkaEmployee)}</span>
           </div>
           <div className="flex justify-between items-center py-2 px-3 rounded-lg bg-muted/50">

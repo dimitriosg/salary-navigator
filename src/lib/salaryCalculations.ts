@@ -1,4 +1,5 @@
-// Greek salary calculation utilities (2024 rates)
+// Greek salary calculation utilities (2024/2025 rates)
+// Based on aftertax.gr and jobfind.gr calculations
 
 export interface SalaryBreakdown {
   grossSalary: number;
@@ -10,12 +11,12 @@ export interface SalaryBreakdown {
   totalDeductions: number;
 }
 
-// EFKA contribution rates
-// Employee: Main pension 6.67% + Auxiliary 3.25% + Health 2.15% + Unemployment 1.33% = 13.40%
-const EFKA_EMPLOYEE_RATE = 0.134; // 13.40%
-const EFKA_EMPLOYER_RATE = 0.2206; // 22.06%
+// EFKA contribution rates (IKA)
+// Source: aftertax.gr - 13.37% employee
+const EFKA_EMPLOYEE_RATE = 0.1337; // 13.37%
+const EFKA_EMPLOYER_RATE = 0.2179; // 21.79%
 
-// Income tax brackets for 2024
+// Income tax brackets for 2024/2025
 const TAX_BRACKETS = [
   { limit: 10000, rate: 0.09 },
   { limit: 20000, rate: 0.22 },
@@ -24,30 +25,38 @@ const TAX_BRACKETS = [
   { limit: Infinity, rate: 0.44 },
 ];
 
-// Solidarity tax is suspended for 2024, but we keep the logic
+// Solidarity tax is suspended since 2021 for private sector
 const SOLIDARITY_SUSPENDED = true;
-const SOLIDARITY_BRACKETS = [
-  { limit: 12000, rate: 0 },
-  { limit: 20000, rate: 0.022 },
-  { limit: 30000, rate: 0.05 },
-  { limit: 40000, rate: 0.065 },
-  { limit: 65000, rate: 0.075 },
-  { limit: 220000, rate: 0.09 },
-  { limit: Infinity, rate: 0.10 },
-];
 
-// Tax credit for salaried employees (2024)
-// 777€ for income ≤ 12,000€, decreases by 20€ per 1,000€ above 12,000€
-function getTaxCredit(annualIncome: number): number {
-  if (annualIncome <= 12000) {
-    return 777;
+// Tax credit based on number of children (2024)
+const TAX_CREDIT_BY_CHILDREN: Record<number, number> = {
+  0: 777,
+  1: 900,
+  2: 1120,
+  3: 1340,
+  4: 1580,
+  5: 1800,
+  6: 2000,
+  7: 2220,
+  8: 2440,
+  9: 2660,
+};
+
+// Tax credit calculation
+// Base credit decreases by 20€ for every 1,000€ of taxable income above 12,000€
+function getTaxCredit(annualTaxableIncome: number, children: number = 0): number {
+  const baseCredit = TAX_CREDIT_BY_CHILDREN[Math.min(children, 9)] || 777;
+  
+  if (annualTaxableIncome <= 12000) {
+    return baseCredit;
   }
-  // Credit decreases by 20€ for every 1,000€ above 12,000€
-  const credit = 777 - (annualIncome - 12000) * 0.02;
-  return Math.max(0, credit);
+  
+  // Decrease by 20€ for every 1,000€ above 12,000€
+  const reduction = ((annualTaxableIncome - 12000) / 1000) * 20;
+  return Math.max(0, baseCredit - reduction);
 }
 
-function calculateIncomeTax(annualTaxableIncome: number): number {
+function calculateIncomeTax(annualTaxableIncome: number, children: number = 0): number {
   let tax = 0;
   let previousLimit = 0;
 
@@ -64,34 +73,13 @@ function calculateIncomeTax(annualTaxableIncome: number): number {
   }
 
   // Apply tax credit
-  const credit = getTaxCredit(annualTaxableIncome);
+  const credit = getTaxCredit(annualTaxableIncome, children);
   tax = Math.max(0, tax - credit);
 
   return tax;
 }
 
-function calculateSolidarityTax(annualIncome: number): number {
-  if (SOLIDARITY_SUSPENDED) return 0;
-  
-  let tax = 0;
-  let previousLimit = 0;
-
-  for (const bracket of SOLIDARITY_BRACKETS) {
-    if (annualIncome <= previousLimit) break;
-    
-    const taxableInBracket = Math.min(
-      annualIncome - previousLimit,
-      bracket.limit - previousLimit
-    );
-    
-    tax += taxableInBracket * bracket.rate;
-    previousLimit = bracket.limit;
-  }
-
-  return tax;
-}
-
-export function calculateGrossToNet(monthlyGross: number, months: number = 14): SalaryBreakdown {
+export function calculateGrossToNet(monthlyGross: number, months: number = 14, children: number = 0): SalaryBreakdown {
   const annualGross = monthlyGross * months;
   
   // EFKA contributions
@@ -102,8 +90,8 @@ export function calculateGrossToNet(monthlyGross: number, months: number = 14): 
   const annualTaxableIncome = annualGross - annualEfkaEmployee;
   
   // Calculate taxes
-  const annualIncomeTax = calculateIncomeTax(annualTaxableIncome);
-  const annualSolidarityTax = calculateSolidarityTax(annualTaxableIncome);
+  const annualIncomeTax = calculateIncomeTax(annualTaxableIncome, children);
+  const annualSolidarityTax = 0; // Suspended
   
   // Total deductions
   const totalAnnualDeductions = annualEfkaEmployee + annualIncomeTax + annualSolidarityTax;
@@ -123,7 +111,7 @@ export function calculateGrossToNet(monthlyGross: number, months: number = 14): 
   };
 }
 
-export function calculateNetToGross(monthlyNet: number, months: number = 14): SalaryBreakdown {
+export function calculateNetToGross(monthlyNet: number, months: number = 14, children: number = 0): SalaryBreakdown {
   // Use binary search to find the gross salary that results in the target net
   let low = monthlyNet;
   let high = monthlyNet * 3; // Assume gross won't be more than 3x net
@@ -131,7 +119,7 @@ export function calculateNetToGross(monthlyNet: number, months: number = 14): Sa
 
   while (high - low > 0.01) {
     const mid = (low + high) / 2;
-    const breakdown = calculateGrossToNet(mid, months);
+    const breakdown = calculateGrossToNet(mid, months, children);
     
     if (breakdown.netSalary < monthlyNet) {
       low = mid;
@@ -141,7 +129,7 @@ export function calculateNetToGross(monthlyNet: number, months: number = 14): Sa
     }
   }
 
-  return result || calculateGrossToNet(high, months);
+  return result || calculateGrossToNet(high, months, children);
 }
 
 export interface YearlySummary {
@@ -155,24 +143,27 @@ export interface YearlySummary {
   monthlySalaries: { month: string; gross: number; net: number }[];
 }
 
-export function calculateYearlySummary(salaries: { month: string; gross: number }[]): YearlySummary {
+export function calculateYearlySummary(salaries: { month: string; gross: number }[], children: number = 0): YearlySummary {
   const totalGross = salaries.reduce((sum, s) => sum + s.gross, 0);
   
   // Calculate annual tax based on total income
   const annualEfkaEmployee = totalGross * EFKA_EMPLOYEE_RATE;
   const annualEfkaEmployer = totalGross * EFKA_EMPLOYER_RATE;
   const taxableIncome = totalGross - annualEfkaEmployee;
-  const annualIncomeTax = calculateIncomeTax(taxableIncome);
-  const annualSolidarityTax = calculateSolidarityTax(taxableIncome);
+  const annualIncomeTax = calculateIncomeTax(taxableIncome, children);
+  const annualSolidarityTax = 0; // Suspended
   const totalDeductions = annualEfkaEmployee + annualIncomeTax + annualSolidarityTax;
   const totalNet = totalGross - totalDeductions;
 
+  // Calculate monthly net for each salary entry
+  // Note: This is approximate as tax is calculated annually
   const monthlySalaries = salaries.map(s => {
-    const breakdown = calculateGrossToNet(s.gross, 1);
+    const monthlyEfka = s.gross * EFKA_EMPLOYEE_RATE;
+    const monthlyTax = (annualIncomeTax / totalGross) * s.gross;
     return {
       month: s.month,
       gross: s.gross,
-      net: breakdown.netSalary,
+      net: s.gross - monthlyEfka - monthlyTax,
     };
   });
 
