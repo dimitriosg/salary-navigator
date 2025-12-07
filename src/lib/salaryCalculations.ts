@@ -10,8 +10,9 @@ export interface SalaryBreakdown {
   totalDeductions: number;
 }
 
-// EFKA contribution rates (employee portion)
-const EFKA_EMPLOYEE_RATE = 0.1387; // 13.87%
+// EFKA contribution rates
+// Employee: Main pension 6.67% + Auxiliary 3.25% + Health 2.15% + Unemployment 1.33% = 13.40%
+const EFKA_EMPLOYEE_RATE = 0.134; // 13.40%
 const EFKA_EMPLOYER_RATE = 0.2206; // 22.06%
 
 // Income tax brackets for 2024
@@ -36,15 +37,14 @@ const SOLIDARITY_BRACKETS = [
 ];
 
 // Tax credit for salaried employees (2024)
-// 777€ for income ≤ 12,000€, decreases linearly to 0€ at 36,000€
+// 777€ for income ≤ 12,000€, decreases by 20€ per 1,000€ above 12,000€
 function getTaxCredit(annualIncome: number): number {
   if (annualIncome <= 12000) {
     return 777;
-  } else if (annualIncome < 36000) {
-    // Linear decrease: 777 at 12,000€ → 0 at 36,000€
-    return Math.max(0, 777 - (annualIncome - 12000) * (777 / 24000));
   }
-  return 0;
+  // Credit decreases by 20€ for every 1,000€ above 12,000€
+  const credit = 777 - (annualIncome - 12000) * 0.02;
+  return Math.max(0, credit);
 }
 
 function calculateIncomeTax(annualTaxableIncome: number): number {
