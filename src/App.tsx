@@ -7,6 +7,12 @@ import { ThemeProvider } from "@/contexts/ThemeContext";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
+import EmployerPage from "./pages/EmployerPage";
+import YearlyPage from "./pages/YearlyPage";
+import EasterBonusPage from "./pages/EasterBonusPage";
+import ChristmasBonusPage from "./pages/ChristmasBonusPage";
+import VacationAllowancePage from "./pages/VacationAllowancePage";
+import SeverancePage from "./pages/SeverancePage";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +26,12 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
+              <Route path="/yearly" element={<YearlyPage />} />
+              <Route path="/employer" element={<EmployerPage />} />
+              <Route path="/bonus/easter" element={<EasterBonusPage />} />
+              <Route path="/bonus/christmas" element={<ChristmasBonusPage />} />
+              <Route path="/vacation-allowance" element={<VacationAllowancePage />} />
+              <Route path="/severance" element={<SeverancePage />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

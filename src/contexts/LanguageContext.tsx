@@ -12,15 +12,22 @@ const translations: Record<Language, Record<string, string>> = {
   el: {
     'app.title': 'Υπολογιστής Μισθού',
     'app.subtitle': 'Υπολογίστε τον καθαρό μισθό σας, τις εισφορές σας και προετοιμάστε τη φορολογική σας δήλωση',
-    'tabs.calculator': 'Υπολογιστής',
-    'tabs.calculator.short': 'Υπολ.',
-    'tabs.employer': 'Εργοδότης',
+    'tabs.calculator': 'Μισθοδοσία',
+    'tabs.calculator.short': 'Μισθ.',
+    'tabs.employer': 'Κόστος Εργοδότη',
     'tabs.employer.short': 'Εργοδ.',
     'tabs.yearly': 'Ετήσια',
+    'menu.payroll': 'Μισθοδοσία',
+    'menu.yearly': 'Ετήσια Σύνοψη',
+    'menu.employer': 'Κόστος Εργοδότη',
+    'menu.easterBonus': 'Δώρο Πάσχα',
+    'menu.christmasBonus': 'Δώρο Χριστουγέννων',
+    'menu.vacationAllowance': 'Επίδομα Άδειας',
+    'menu.severance': 'Αποζημίωση Απόλυσης',
     'footer.disclaimer': 'Οι υπολογισμοί βασίζονται στα φορολογικά δεδομένα του 2025. Για επίσημη χρήση συμβουλευτείτε λογιστή.',
     
     // Calculator
-    'calc.title': 'Υπολογιστής Μισθού',
+    'calc.title': 'Υπολογιστής Μισθοδοσίας',
     'calc.description': 'Υπολογίστε τον μισθό σας με βάση τα ελληνικά φορολογικά δεδομένα 2025',
     'calc.grossToNet': 'Μικτά → Καθαρά',
     'calc.netToGross': 'Καθαρά → Μικτά',
@@ -91,19 +98,47 @@ const translations: Record<Language, Record<string, string>> = {
       'η οποία πιθανότατα θα εμφανιστεί ως επιστροφή φόρου στην επόμενη φορολογική σας δήλωση.',
     'yearly.refundDisclaimer':
       '* Οι παραπάνω υπολογισμοί είναι ενδεικτικοί και δεν αποτελούν φορολογική ή λογιστική συμβουλή. Επιβεβαιώστε τα τελικά ποσά με τον λογιστή σας.',
+
+    // Bonuses & allowances
+    'bonus.baseSalary': 'Μηνιαίος Μικτός Μισθός (€)',
+    'bonus.apply': 'Υπολογισμός',
+    'bonus.netResult': 'Καθαρό Ποσό',
+    'bonus.grossResult': 'Μικτό Ποσό',
+    'bonus.children': 'Τέκνα',
+    'bonus.easter.title': 'Υπολογισμός Δώρου Πάσχα',
+    'bonus.christmas.title': 'Υπολογισμός Δώρου Χριστουγέννων',
+    'bonus.vacation.title': 'Υπολογισμός Επιδόματος Άδειας',
+    'bonus.multiplier': 'Πολλαπλασιαστής Δώρου',
+    'bonus.description': 'Υπολογίστε καθαρό και μικτό ποσό δώρου με βάση τον μηνιαίο μισθό.',
+    'bonus.note': '* Χρήση απλοποιημένου υπολογισμού για καθαρό/μικτό ποσό.',
+
+    // Severance
+    'severance.title': 'Υπολογισμός Αποζημίωσης Απόλυσης',
+    'severance.description': 'Εκτιμήστε το ποσό αποζημίωσης βάσει μισθού και ετών υπηρεσίας.',
+    'severance.years': 'Έτη Προϋπηρεσίας',
+    'severance.monthlySalary': 'Μηνιαίος Μικτός Μισθός (€)',
+    'severance.estimate': 'Εκτίμηση',
+    'severance.note': '* Απλοποιημένος υπολογισμός με ανώτατο όριο 12 μισθών.',
   },
   en: {
     'app.title': 'Salary Calculator',
     'app.subtitle': 'Calculate your net salary, contributions and prepare your tax return',
-    'tabs.calculator': 'Calculator',
-    'tabs.calculator.short': 'Calc.',
-    'tabs.employer': 'Employer',
+    'tabs.calculator': 'Payroll',
+    'tabs.calculator.short': 'Pay.',
+    'tabs.employer': 'Employer Cost',
     'tabs.employer.short': 'Empl.',
     'tabs.yearly': 'Yearly',
+    'menu.payroll': 'Payroll',
+    'menu.yearly': 'Yearly Summary',
+    'menu.employer': 'Employer Cost',
+    'menu.easterBonus': 'Easter Bonus',
+    'menu.christmasBonus': 'Christmas Bonus',
+    'menu.vacationAllowance': 'Vacation Allowance',
+    'menu.severance': 'Severance Pay',
     'footer.disclaimer': 'Calculations are based on 2025 tax data. For official use, consult an accountant.',
     
     // Calculator
-    'calc.title': 'Salary Calculator',
+    'calc.title': 'Payroll Calculator',
     'calc.description': 'Calculate your salary based on Greek tax data 2025',
     'calc.grossToNet': 'Gross → Net',
     'calc.netToGross': 'Net → Gross',
@@ -174,6 +209,27 @@ const translations: Record<Language, Record<string, string>> = {
       'which is likely to appear as a tax refund in your next tax return.',
     'yearly.refundDisclaimer':
       '* The above calculations are indicative and do not constitute tax or accounting advice. Please confirm the final amounts with your accountant.',
+
+    // Bonuses & allowances
+    'bonus.baseSalary': 'Monthly Gross Salary (€)',
+    'bonus.apply': 'Calculate',
+    'bonus.netResult': 'Net Amount',
+    'bonus.grossResult': 'Gross Amount',
+    'bonus.children': 'Children',
+    'bonus.easter.title': 'Easter Bonus Calculator',
+    'bonus.christmas.title': 'Christmas Bonus Calculator',
+    'bonus.vacation.title': 'Vacation Allowance Calculator',
+    'bonus.multiplier': 'Bonus Multiplier',
+    'bonus.description': 'Calculate net and gross bonus amounts based on your monthly salary.',
+    'bonus.note': '* Simplified calculation for net/gross bonus amounts.',
+
+    // Severance
+    'severance.title': 'Severance Pay Calculator',
+    'severance.description': 'Estimate severance based on salary and years of service.',
+    'severance.years': 'Years of Service',
+    'severance.monthlySalary': 'Monthly Gross Salary (€)',
+    'severance.estimate': 'Estimate',
+    'severance.note': '* Simplified calculation capped at 12 monthly salaries.',
   },
 };
 
