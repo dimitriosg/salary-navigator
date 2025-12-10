@@ -1,8 +1,8 @@
-import { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { SalaryCalculator } from '@/components/SalaryCalculator';
 import { YearlySummary } from '@/components/YearlySummary';
-import { Calculator, CalendarDays, Euro } from 'lucide-react';
+import { EmployerCostCalculator } from '@/components/EmployerCostCalculator';
+import { Calculator, CalendarDays, Euro, Building2 } from 'lucide-react';
 
 const Index = () => {
   return (
@@ -25,21 +25,29 @@ const Index = () => {
       {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 -mt-8 pb-16">
         <Tabs defaultValue="calculator" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 max-w-md mx-auto mb-8 h-14 p-1 bg-card shadow-card">
+          <TabsList className="grid w-full grid-cols-3 max-w-xl mx-auto mb-8 h-14 p-1 bg-card shadow-card">
             <TabsTrigger 
               value="calculator" 
-              className="gap-2 text-base data-[state=active]:gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md h-12 rounded-lg transition-all"
+              className="gap-2 text-sm data-[state=active]:gradient-primary data-[state=active]:text-primary-foreground data-[state=active]:shadow-md h-12 rounded-lg transition-all"
             >
-              <Calculator className="w-5 h-5" />
+              <Calculator className="w-4 h-4" />
               <span className="hidden sm:inline">Υπολογιστής</span>
               <span className="sm:hidden">Υπολ.</span>
             </TabsTrigger>
             <TabsTrigger 
-              value="yearly" 
-              className="gap-2 text-base data-[state=active]:gradient-secondary data-[state=active]:text-secondary-foreground data-[state=active]:shadow-md h-12 rounded-lg transition-all"
+              value="employer" 
+              className="gap-2 text-sm data-[state=active]:gradient-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-md h-12 rounded-lg transition-all"
             >
-              <CalendarDays className="w-5 h-5" />
-              <span className="hidden sm:inline">Ετήσια Σύνοψη</span>
+              <Building2 className="w-4 h-4" />
+              <span className="hidden sm:inline">Εργοδότης</span>
+              <span className="sm:hidden">Εργοδ.</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="yearly" 
+              className="gap-2 text-sm data-[state=active]:gradient-secondary data-[state=active]:text-secondary-foreground data-[state=active]:shadow-md h-12 rounded-lg transition-all"
+            >
+              <CalendarDays className="w-4 h-4" />
+              <span className="hidden sm:inline">Ετήσια</span>
               <span className="sm:hidden">Ετήσια</span>
             </TabsTrigger>
           </TabsList>
@@ -47,6 +55,10 @@ const Index = () => {
           <div className="animate-slide-up">
             <TabsContent value="calculator" className="mt-0">
               <SalaryCalculator />
+            </TabsContent>
+
+            <TabsContent value="employer" className="mt-0">
+              <EmployerCostCalculator />
             </TabsContent>
 
             <TabsContent value="yearly" className="mt-0">
