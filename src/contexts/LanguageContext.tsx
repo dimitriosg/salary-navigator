@@ -85,6 +85,12 @@ const translations: Record<Language, Record<string, string>> = {
     'yearly.extraGross': 'Επιπλέον Μικτά',
     'yearly.extraTax': 'Επιπλέον Φόρος',
     'yearly.noBonus': 'Αν δεν είχατε λάβει κανένα μπόνους, θα είχατε πληρώσει λιγότερο φόρο κατά',
+    'yearly.refundIntro':
+    'Επιπλέον, με βάση τον σταθερό μισθό σας χωρίς μπόνους και σε σύγκριση με τις πραγματικές σας αποδοχές, προκύπτει διαφορά εισπραχθέντων φόρων ύψους',
+    'yearly.refundLikely':
+      'η οποία πιθανότατα θα εμφανιστεί ως επιστροφή φόρου στην επόμενη φορολογική σας δήλωση.',
+    'yearly.refundDisclaimer':
+      '* Οι παραπάνω υπολογισμοί είναι ενδεικτικοί και δεν αποτελούν φορολογική ή λογιστική συμβουλή. Επιβεβαιώστε τα τελικά ποσά με τον λογιστή σας.',
   },
   en: {
     'app.title': 'Salary Calculator',
@@ -162,6 +168,12 @@ const translations: Record<Language, Record<string, string>> = {
     'yearly.extraGross': 'Extra Gross',
     'yearly.extraTax': 'Extra Tax',
     'yearly.noBonus': 'If you had not received any bonus, you would have paid less tax by',
+    'yearly.refundIntro':
+    'In addition, based on your standard salary without bonuses and compared to your actual earnings, there is a difference in taxes paid of',
+    'yearly.refundLikely':
+      'which is likely to appear as a tax refund in your next tax return.',
+    'yearly.refundDisclaimer':
+      '* The above calculations are indicative and do not constitute tax or accounting advice. Please confirm the final amounts with your accountant.',
   },
 };
 
