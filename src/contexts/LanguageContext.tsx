@@ -12,12 +12,30 @@ const translations: Record<Language, Record<string, string>> = {
   el: {
     'app.title': 'Υπολογιστής Μισθού',
     'app.subtitle': 'Υπολογίστε τον καθαρό μισθό σας, τις εισφορές σας και προετοιμάστε τη φορολογική σας δήλωση',
-    'tabs.calculator': 'Υπολογιστής',
-    'tabs.calculator.short': 'Υπολ.',
+    'tabs.calculator': 'Μισθοδοσία',
+    'tabs.calculator.short': 'Μισθ.',
     'tabs.employer': 'Εργοδότης',
     'tabs.employer.short': 'Εργοδ.',
     'tabs.yearly': 'Ετήσια',
     'footer.disclaimer': 'Οι υπολογισμοί βασίζονται στα φορολογικά δεδομένα του 2025. Για επίσημη χρήση συμβουλευτείτε λογιστή.',
+
+    // Navigation
+    'nav.title': 'Μενού εργαλείων',
+    'nav.subtitle': 'Γρήγορη πρόσβαση σε όλους τους υπολογισμούς',
+    'nav.payroll': 'Μισθοδοσία',
+    'nav.payrollDesc': 'Μικτά και καθαρά δίπλα-δίπλα',
+    'nav.yearly': 'Ετήσια σύνοψη',
+    'nav.yearlyDesc': 'Προβλέψτε τη φορολογική δήλωση',
+    'nav.employer': 'Κόστος εργοδότη',
+    'nav.employerDesc': 'Συνολικό κόστος και εισφορές',
+    'nav.easter': 'Δώρο Πάσχα',
+    'nav.easterDesc': 'Υπολογισμός εποχικού δώρου',
+    'nav.christmas': 'Δώρο Χριστουγέννων',
+    'nav.christmasDesc': 'Μικτά και καθαρά για το δώρο',
+    'nav.vacation': 'Επίδομα άδειας',
+    'nav.vacationDesc': 'Αποδοχές καλοκαιρινής άδειας',
+    'nav.severance': 'Αποζημίωση απόλυσης',
+    'nav.severanceDesc': 'Εκτίμηση αποζημίωσης βάσει προϋπηρεσίας',
     
     // Calculator
     'calc.title': 'Υπολογιστής Μισθού',
@@ -41,6 +59,30 @@ const translations: Record<Language, Record<string, string>> = {
     'calc.totalDeductions': 'Συνολικές Κρατήσεις',
     'calc.note14': '* Υπολογισμοί βάσει 14 μισθών (12 + Δώρα)',
     'calc.noteSolidarity': '* Εισφορά Αλληλεγγύης: Αναστολή για 2025',
+
+    // Bonuses
+    'bonus.monthlyGross': 'Μηνιαίος μικτός μισθός (€)',
+    'bonus.monthsWorked': 'Μήνες εργασίας (τρέχον έτος)',
+    'bonus.monthsHint': 'Ρυθμίστε τους μήνες για να προσαρμοστεί το ποσό του δώρου.',
+    'bonus.calculate': 'Υπολογισμός ποσού',
+    'bonus.gross': 'Μικτό ποσό',
+    'bonus.net': 'Καθαρό ποσό',
+    'bonus.note': '* Απλή εκτίμηση με βάση τις κρατήσεις ενός μηνιαίου ποσού.',
+    'bonus.easter.title': 'Δώρο Πάσχα',
+    'bonus.easter.description': 'Υπολογίστε γρήγορα το δώρο Πάσχα σε μικτά και καθαρά.',
+    'bonus.christmas.title': 'Δώρο Χριστουγέννων',
+    'bonus.christmas.description': 'Εκτίμηση για την πληρωμή του δώρου Χριστουγέννων.',
+    'bonus.vacation.title': 'Επίδομα άδειας',
+    'bonus.vacation.description': 'Υπολογισμός του επιδόματος καλοκαιρινής άδειας.',
+
+    // Severance
+    'severance.title': 'Αποζημίωση Απόλυσης',
+    'severance.description': 'Απλή εκτίμηση με βάση τον μηνιαίο μισθό και την προϋπηρεσία.',
+    'severance.monthlyGross': 'Μηνιαίος μικτός μισθός (€)',
+    'severance.years': 'Χρόνια προϋπηρεσίας',
+    'severance.hint': 'Χρησιμοποιείται απλή αναλογία 0,5 μισθού ανά έτος με ελάχιστο 1 μισθό.',
+    'severance.calculate': 'Υπολογισμός αποζημίωσης',
+    'severance.note': '* Το αποτέλεσμα είναι ενδεικτικό και δεν αντικαθιστά νομική συμβουλή.',
     
     // Employer
     'employer.title': 'Κόστος Εργοδότη',
@@ -95,12 +137,30 @@ const translations: Record<Language, Record<string, string>> = {
   en: {
     'app.title': 'Salary Calculator',
     'app.subtitle': 'Calculate your net salary, contributions and prepare your tax return',
-    'tabs.calculator': 'Calculator',
-    'tabs.calculator.short': 'Calc.',
+    'tabs.calculator': 'Payroll',
+    'tabs.calculator.short': 'Payroll',
     'tabs.employer': 'Employer',
     'tabs.employer.short': 'Empl.',
     'tabs.yearly': 'Yearly',
     'footer.disclaimer': 'Calculations are based on 2025 tax data. For official use, consult an accountant.',
+
+    // Navigation
+    'nav.title': 'Tools menu',
+    'nav.subtitle': 'Quick access to every calculator',
+    'nav.payroll': 'Payroll',
+    'nav.payrollDesc': 'Gross and net side by side',
+    'nav.yearly': 'Yearly summary',
+    'nav.yearlyDesc': 'Predict your tax return',
+    'nav.employer': 'Employer cost',
+    'nav.employerDesc': 'Total cost and contributions',
+    'nav.easter': 'Easter bonus',
+    'nav.easterDesc': 'Seasonal bonus estimation',
+    'nav.christmas': 'Christmas bonus',
+    'nav.christmasDesc': 'Gross and net for the holiday gift',
+    'nav.vacation': 'Vacation allowance',
+    'nav.vacationDesc': 'Summer leave allowance',
+    'nav.severance': 'Severance',
+    'nav.severanceDesc': 'Estimate based on service years',
     
     // Calculator
     'calc.title': 'Salary Calculator',
@@ -124,6 +184,30 @@ const translations: Record<Language, Record<string, string>> = {
     'calc.totalDeductions': 'Total Deductions',
     'calc.note14': '* Calculations based on 14 salaries (12 + Bonuses)',
     'calc.noteSolidarity': '* Solidarity Contribution: Suspended for 2025',
+
+    // Bonuses
+    'bonus.monthlyGross': 'Monthly gross salary (€)',
+    'bonus.monthsWorked': 'Months worked (current year)',
+    'bonus.monthsHint': 'Adjust months to prorate the bonus amount.',
+    'bonus.calculate': 'Calculate amount',
+    'bonus.gross': 'Gross amount',
+    'bonus.net': 'Net amount',
+    'bonus.note': '* Simple estimate based on monthly deductions.',
+    'bonus.easter.title': 'Easter Bonus',
+    'bonus.easter.description': 'Quickly estimate Easter bonus in gross and net.',
+    'bonus.christmas.title': 'Christmas Bonus',
+    'bonus.christmas.description': 'Estimation for the Christmas gift payment.',
+    'bonus.vacation.title': 'Vacation Allowance',
+    'bonus.vacation.description': 'Calculate the summer vacation allowance.',
+
+    // Severance
+    'severance.title': 'Severance Pay',
+    'severance.description': 'Simple estimate based on monthly salary and service.',
+    'severance.monthlyGross': 'Monthly gross salary (€)',
+    'severance.years': 'Years of service',
+    'severance.hint': 'Uses a 0.5 salary per year multiplier with a minimum of 1 salary.',
+    'severance.calculate': 'Calculate severance',
+    'severance.note': '* Indicative result only; not legal advice.',
     
     // Employer
     'employer.title': 'Employer Cost',
