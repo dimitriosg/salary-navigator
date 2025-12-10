@@ -42,6 +42,23 @@ const App = () => (
             </BrowserRouter>
           </TooltipProvider>
         </EmploymentProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/yearly" element={<Yearly />} />
+              <Route path="/employer" element={<Employer />} />
+              <Route path="/easter-bonus" element={<EasterBonus />} />
+              <Route path="/christmas-bonus" element={<ChristmasBonus />} />
+              <Route path="/vacation-allowance" element={<VacationAllowance />} />
+              <Route path="/severance" element={<Severance />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
       </LanguageProvider>
     </ThemeProvider>
   </QueryClientProvider>

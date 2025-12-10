@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
 import { Calculator, CalendarDays, Gift, Landmark, Umbrella, Briefcase, CalendarCheck } from 'lucide-react';
+import { Calculator, CalendarDays, Gift, Landmark, Umbrella, Briefcase } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const links = [

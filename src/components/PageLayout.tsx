@@ -1,7 +1,6 @@
 import { ReactNode } from 'react';
 import { ThemeLanguageToggle } from '@/components/ThemeLanguageToggle';
 import { NavigationMenu } from '@/components/NavigationMenu';
-import { useLanguage } from '@/contexts/LanguageContext';
 
 interface PageLayoutProps {
   title: string;
@@ -11,8 +10,6 @@ interface PageLayoutProps {
 }
 
 export function PageLayout({ title, subtitle, icon, children }: PageLayoutProps) {
-  const { t } = useLanguage();
-
   return (
     <div className="min-h-screen bg-background">
       <header className="w-full gradient-hero py-12 px-4 md:py-16">
@@ -41,7 +38,7 @@ export function PageLayout({ title, subtitle, icon, children }: PageLayoutProps)
 
       <footer className="w-full py-6 px-4 border-t border-border bg-muted/30">
         <div className="max-w-6xl mx-auto text-center">
-          <p className="text-sm text-muted-foreground">{t('footer.disclaimer')}</p>
+          <p className="text-sm text-muted-foreground">Κατασκευάστηκε για γρήγορους υπολογισμούς μισθοδοσίας.</p>
         </div>
       </footer>
     </div>

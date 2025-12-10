@@ -13,7 +13,7 @@ const translations: Record<Language, Record<string, string>> = {
     'app.title': 'Υπολογιστής Μισθού',
     'app.subtitle': 'Υπολογίστε τον καθαρό μισθό σας, τις εισφορές σας και προετοιμάστε τη φορολογική σας δήλωση',
     'tabs.calculator': 'Μισθοδοσία',
-    'tabs.calculator.short': 'Μισθοδοσία',
+    'tabs.calculator.short': 'Μισθ.',
     'tabs.employer': 'Εργοδότης',
     'tabs.employer.short': 'Εργοδ.',
     'tabs.yearly': 'Ετήσια',
@@ -36,9 +36,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.vacationDesc': 'Αποδοχές καλοκαιρινής άδειας',
     'nav.severance': 'Αποζημίωση απόλυσης',
     'nav.severanceDesc': 'Εκτίμηση αποζημίωσης βάσει προϋπηρεσίας',
-    'nav.leaveBalance': 'Υπόλοιπο Αδειών',
-    'nav.leaveBalanceDesc': 'Ετήσια δικαιώματα και υπόλοιπο',
-
+    
     // Calculator
     'calc.title': 'Μισθοδοσία',
     'calc.description': 'Υπολογίστε μικτά και καθαρά σε πραγματικό χρόνο',
@@ -64,63 +62,28 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Bonuses
     'bonus.monthlyGross': 'Μηνιαίος μικτός μισθός (€)',
-    'bonus.hireDate': 'Πότε προσληφθήκατε στον τρέχοντα εργοδότη;',
-    'bonus.weekType': 'Τύπος εβδομάδας εργασίας',
-    'bonus.weekType5': 'Πενθήμερο',
-    'bonus.weekType6': 'Εξαήμερο',
-    'bonus.hiredCurrentYearQuestion': 'Η πρόσληψή σας έγινε μέσα στο τρέχον έτος;',
-    'bonus.employmentDays': 'Ημέρες απασχόλησης στην περίοδο',
-    'bonus.grossLabel': 'Μικτό ποσό δώρου',
+    'bonus.monthsWorked': 'Μήνες εργασίας (τρέχον έτος)',
+    'bonus.monthsHint': 'Ρυθμίστε τους μήνες για να προσαρμοστεί το ποσό του δώρου.',
     'bonus.calculate': 'Υπολογισμός ποσού',
     'bonus.gross': 'Μικτό ποσό',
     'bonus.net': 'Καθαρό ποσό',
     'bonus.note': '* Απλή εκτίμηση με βάση τις κρατήσεις ενός μηνιαίου ποσού.',
-    'bonus.prorationNote':
-      'Αν η πρόσληψή σας έγινε μέσα στη χρονιά, τα δώρα και το επίδομα άδειας υπολογίζονται μόνο για τις ημέρες που εργαστήκατε στην περίοδο.',
     'bonus.easter.title': 'Δώρο Πάσχα',
     'bonus.easter.description': 'Υπολογίστε γρήγορα το δώρο Πάσχα σε μικτά και καθαρά.',
-    'bonus.easter.period': 'Ημέρες απασχόλησης στην περίοδο 1/1–30/4',
-    'bonus.easter.disclaimer':
-      'Ο υπολογισμός είναι ενδεικτικός. Ελέγξτε τις ακριβείς αποδοχές σας με τον λογιστή σας.',
     'bonus.christmas.title': 'Δώρο Χριστουγέννων',
     'bonus.christmas.description': 'Εκτίμηση για την πληρωμή του δώρου Χριστουγέννων.',
-    'bonus.christmas.period': 'Ημέρες απασχόλησης στην περίοδο 1/5–31/12',
-    'bonus.christmas.disclaimer':
-      'Ο υπολογισμός είναι ενδεικτικός. Ελέγξτε τις ακριβείς αποδοχές σας με τον λογιστή σας.',
     'bonus.vacation.title': 'Επίδομα άδειας',
     'bonus.vacation.description': 'Υπολογισμός του επιδόματος καλοκαιρινής άδειας.',
-    'bonus.vacation.leaveDays': 'Ημέρες άδειας',
-    'bonus.vacation.allowanceGross': 'Μικτό επίδομα άδειας',
-    'bonus.vacation.payForDays': 'Αποδοχές άδειας (χωρίς πλαφόν)',
-    'bonus.vacation.disclaimer':
-      'Οι υπολογισμοί ισχύουν για τυπική πλήρη απασχόληση. Για ειδικές περιπτώσεις συμβουλευτείτε τον λογιστή σας.',
-
-    // Leave balance
-    'leaveBalance.title': 'Υπόλοιπο Αδειών',
-    'leaveBalance.description': 'Υπολογίστε τις ημέρες άδειας που δικαιούστε για το τρέχον έτος.',
-    'leaveBalance.currentYear': 'Τρέχον έτος',
-    'leaveBalance.takenDays': 'Ημέρες άδειας που έχετε ήδη πάρει φέτος',
-    'leaveBalance.entitled': 'Δικαιούστε συνολικά',
-    'leaveBalance.used': 'Έχετε ήδη χρησιμοποιήσει',
-    'leaveBalance.remaining': 'Υπόλοιπο αδείας',
-    'leaveBalance.days': 'ημέρες',
-    'leaveBalance.disclaimer':
-      'Οι ημέρες άδειας υπολογίζονται με βάση το γενικό πλαίσιο της εργατικής νομοθεσίας. Ειδικές ρυθμίσεις (κλαδικές συμβάσεις, ΣΣΕ, μερική απασχόληση) ενδέχεται να διαφοροποιούν το αποτέλεσμα. Συμβουλευτείτε τον λογιστή ή τον σύμβουλό σας.',
 
     // Severance
     'severance.title': 'Αποζημίωση Απόλυσης',
-    'severance.description': 'Υπολογισμός αποζημίωσης καταγγελίας χωρίς προειδοποίηση.',
+    'severance.description': 'Απλή εκτίμηση με βάση τον μηνιαίο μισθό και την προϋπηρεσία.',
     'severance.monthlyGross': 'Μηνιαίος μικτός μισθός (€)',
-    'severance.years': 'Χρόνια προϋπηρεσίας στον ίδιο εργοδότη',
-    'severance.hint': 'Υπολογίζονται μόνο τα πλήρη έτη προϋπηρεσίας.',
-    'severance.had17YearsQuestion': 'Είχατε τουλάχιστον 17 χρόνια υπηρεσίας στις 12/11/2012;',
-    'severance.had17YearsHint': 'Ενεργοποιεί τον πρόσθετο πίνακα αποζημίωσης για παλαιούς εργαζόμενους.',
+    'severance.years': 'Χρόνια προϋπηρεσίας',
+    'severance.hint': 'Χρησιμοποιείται απλή αναλογία 0,5 μισθού ανά έτος με ελάχιστο 1 μισθό.',
     'severance.calculate': 'Υπολογισμός αποζημίωσης',
-    'severance.monthsAwarded': 'Μήνες αποζημίωσης',
-    'severance.grossAmount': 'Μικτό ποσό αποζημίωσης',
-    'severance.disclaimer':
-      'Ο υπολογισμός είναι ενδεικτικός και βασίζεται στο ισχύον νομικό πλαίσιο. Σε κάθε περίπτωση, επιβεβαιώστε τα ακριβή ποσά με τον λογιστή ή νομικό σας σύμβουλο.',
-
+    'severance.note': '* Το αποτέλεσμα είναι ενδεικτικό και δεν αντικαθιστά νομική συμβουλή.',
+    
     // Employer
     'employer.title': 'Κόστος Εργοδότη',
     'employer.description': 'Υπολογίστε το συνολικό κόστος για τον εργοδότη ανά εργαζόμενο',
@@ -203,9 +166,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.vacationDesc': 'Summer leave allowance',
     'nav.severance': 'Severance',
     'nav.severanceDesc': 'Estimate based on service years',
-    'nav.leaveBalance': 'Leave balance',
-    'nav.leaveBalanceDesc': 'Annual entitlement and remaining days',
-
+    
     // Calculator
     'calc.title': 'Payroll',
     'calc.description': 'Compare gross and net in real time',
@@ -231,63 +192,28 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Bonuses
     'bonus.monthlyGross': 'Monthly gross salary (€)',
-    'bonus.hireDate': 'When were you hired by your current employer?',
-    'bonus.weekType': 'Working week type',
-    'bonus.weekType5': '5-day week',
-    'bonus.weekType6': '6-day week',
-    'bonus.hiredCurrentYearQuestion': 'Were you hired within the current year?',
-    'bonus.employmentDays': 'Employment days in the legal period',
-    'bonus.grossLabel': 'Gross bonus amount',
+    'bonus.monthsWorked': 'Months worked (current year)',
+    'bonus.monthsHint': 'Adjust months to prorate the bonus amount.',
     'bonus.calculate': 'Calculate amount',
     'bonus.gross': 'Gross amount',
     'bonus.net': 'Net amount',
     'bonus.note': '* Simple estimate based on monthly deductions.',
-    'bonus.prorationNote':
-      'If you joined mid-year, Easter/Christmas bonuses and vacation allowance are prorated to the days you actually worked in the legal period.',
     'bonus.easter.title': 'Easter Bonus',
     'bonus.easter.description': 'Quickly estimate Easter bonus in gross and net.',
-    'bonus.easter.period': 'Employment days between Jan 1 and Apr 30',
-    'bonus.easter.disclaimer':
-      'This calculation is indicative only. Confirm your final entitlements with your accountant.',
     'bonus.christmas.title': 'Christmas Bonus',
     'bonus.christmas.description': 'Estimation for the Christmas gift payment.',
-    'bonus.christmas.period': 'Employment days between May 1 and Dec 31',
-    'bonus.christmas.disclaimer':
-      'This calculation is indicative only. Confirm your final entitlements with your accountant.',
     'bonus.vacation.title': 'Vacation Allowance',
     'bonus.vacation.description': 'Calculate the summer vacation allowance.',
-    'bonus.vacation.leaveDays': 'Leave days',
-    'bonus.vacation.allowanceGross': 'Gross vacation allowance',
-    'bonus.vacation.payForDays': 'Vacation pay (before cap)',
-    'bonus.vacation.disclaimer':
-      'These calculations assume standard full-time employment. For special cases, confirm with your accountant.',
-
-    // Leave balance
-    'leaveBalance.title': 'Leave balance',
-    'leaveBalance.description': 'Calculate your annual leave entitlement for the current year.',
-    'leaveBalance.currentYear': 'Current year',
-    'leaveBalance.takenDays': 'Leave days you have already taken this year',
-    'leaveBalance.entitled': 'Total entitlement',
-    'leaveBalance.used': 'Already used',
-    'leaveBalance.remaining': 'Remaining leave',
-    'leaveBalance.days': 'days',
-    'leaveBalance.disclaimer':
-      'Leave days are calculated based on the general labour law framework. Sector agreements or part-time arrangements may change the result. Please consult your accountant or advisor.',
 
     // Severance
     'severance.title': 'Severance Pay',
-    'severance.description': 'Calculation for termination without prior notice.',
+    'severance.description': 'Simple estimate based on monthly salary and service.',
     'severance.monthlyGross': 'Monthly gross salary (€)',
-    'severance.years': 'Years of service with the same employer',
-    'severance.hint': 'Only full completed years of service are counted.',
-    'severance.had17YearsQuestion': 'Did you have at least 17 years of service on 12/11/2012?',
-    'severance.had17YearsHint': 'Enables the additional severance table for long-serving employees.',
+    'severance.years': 'Years of service',
+    'severance.hint': 'Uses a 0.5 salary per year multiplier with a minimum of 1 salary.',
     'severance.calculate': 'Calculate severance',
-    'severance.monthsAwarded': 'Severance months owed',
-    'severance.grossAmount': 'Gross severance amount',
-    'severance.disclaimer':
-      'This calculation is indicative and based on current legal guidelines. Always confirm exact amounts with your accountant or legal advisor.',
-
+    'severance.note': '* Indicative result only; not legal advice.',
+    
     // Employer
     'employer.title': 'Employer Cost',
     'employer.description': 'Calculate the total employer cost per employee',

@@ -48,16 +48,26 @@ export function SalaryCalculator() {
   const handleGrossToNet = () => {
     const gross = parseFloat(grossInput);
     if (!isNaN(gross) && gross > 0) {
-      setActiveSide('gross');
-      recalcFromGross(gross);
+      const breakdown = calculateGrossToNet(gross, 14, children);
+      setGrossResult(breakdown);
+      setNetResult(breakdown);
+      setNetInput(breakdown.netSalary.toFixed(2));
+      setTimeout(() => {
+        grossResultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
   };
 
   const handleNetToGross = () => {
     const net = parseFloat(netInput);
     if (!isNaN(net) && net > 0) {
-      setActiveSide('net');
-      recalcFromNet(net);
+      const breakdown = calculateNetToGross(net, 14, children);
+      setNetResult(breakdown);
+      setGrossResult(breakdown);
+      setGrossInput(breakdown.grossSalary.toFixed(2));
+      setTimeout(() => {
+        netResultRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
     }
   };
 
@@ -182,7 +192,7 @@ export function SalaryCalculator() {
                   type="number"
                   placeholder={language === 'el' ? 'π.χ. 1500' : 'e.g. 1500'}
                   value={grossInput}
-                  onChange={(e) => handleGrossChange(e.target.value)}
+                  onChange={(e) => setGrossInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleGrossToNet()}
                   className="text-lg h-12"
                 />
@@ -191,7 +201,7 @@ export function SalaryCalculator() {
                 <ArrowRightLeft className="w-5 h-5 mr-2" />
                 {t('calc.calculateNet')}
               </Button>
-              {breakdown && renderBreakdown(breakdown, activeSide === 'gross')}
+              {grossResult && renderBreakdown(grossResult, true, grossResultRef)}
             </div>
           </div>
 
@@ -208,7 +218,7 @@ export function SalaryCalculator() {
                   type="number"
                   placeholder={language === 'el' ? 'π.χ. 1200' : 'e.g. 1200'}
                   value={netInput}
-                  onChange={(e) => handleNetChange(e.target.value)}
+                  onChange={(e) => setNetInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleNetToGross()}
                   className="text-lg h-12"
                 />
@@ -217,7 +227,7 @@ export function SalaryCalculator() {
                 <ArrowRightLeft className="w-5 h-5 mr-2" />
                 {t('calc.calculateGross')}
               </Button>
-              {breakdown && renderBreakdown(breakdown, activeSide === 'net')}
+              {netResult && renderBreakdown(netResult, false, netResultRef)}
             </div>
           </div>
         </div>
