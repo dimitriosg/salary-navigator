@@ -14,6 +14,7 @@ import ChristmasBonus from "./pages/ChristmasBonus";
 import VacationAllowance from "./pages/VacationAllowance";
 import Severance from "./pages/Severance";
 import { EmploymentProvider } from "./contexts/EmploymentContext";
+import LeaveBalance from "./pages/LeaveBalance";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +35,7 @@ const App = () => (
                 <Route path="/christmas-bonus" element={<ChristmasBonus />} />
                 <Route path="/vacation-allowance" element={<VacationAllowance />} />
                 <Route path="/severance" element={<Severance />} />
+                <Route path="/leave-balance" element={<LeaveBalance />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

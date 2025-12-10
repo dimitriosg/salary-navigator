@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Calculator, CalendarDays, Gift, Landmark, Umbrella, Briefcase } from 'lucide-react';
+import { Calculator, CalendarDays, Gift, Landmark, Umbrella, Briefcase, CalendarCheck } from 'lucide-react';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const links = [
@@ -10,6 +10,7 @@ const links = [
   { to: '/christmas-bonus', icon: Gift, labelKey: 'nav.christmas', descriptionKey: 'nav.christmasDesc' },
   { to: '/vacation-allowance', icon: Umbrella, labelKey: 'nav.vacation', descriptionKey: 'nav.vacationDesc' },
   { to: '/severance', icon: Briefcase, labelKey: 'nav.severance', descriptionKey: 'nav.severanceDesc' },
+  { to: '/leave-balance', icon: CalendarCheck, labelKey: 'nav.leaveBalance', descriptionKey: 'nav.leaveBalanceDesc' },
 ];
 
 export function NavigationMenu() {

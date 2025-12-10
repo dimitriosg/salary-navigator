@@ -36,6 +36,8 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.vacationDesc': 'Αποδοχές καλοκαιρινής άδειας',
     'nav.severance': 'Αποζημίωση απόλυσης',
     'nav.severanceDesc': 'Εκτίμηση αποζημίωσης βάσει προϋπηρεσίας',
+    'nav.leaveBalance': 'Υπόλοιπο Αδειών',
+    'nav.leaveBalanceDesc': 'Ετήσια δικαιώματα και υπόλοιπο',
 
     // Calculator
     'calc.title': 'Μισθοδοσία',
@@ -92,6 +94,18 @@ const translations: Record<Language, Record<string, string>> = {
     'bonus.vacation.payForDays': 'Αποδοχές άδειας (χωρίς πλαφόν)',
     'bonus.vacation.disclaimer':
       'Οι υπολογισμοί ισχύουν για τυπική πλήρη απασχόληση. Για ειδικές περιπτώσεις συμβουλευτείτε τον λογιστή σας.',
+
+    // Leave balance
+    'leaveBalance.title': 'Υπόλοιπο Αδειών',
+    'leaveBalance.description': 'Υπολογίστε τις ημέρες άδειας που δικαιούστε για το τρέχον έτος.',
+    'leaveBalance.currentYear': 'Τρέχον έτος',
+    'leaveBalance.takenDays': 'Ημέρες άδειας που έχετε ήδη πάρει φέτος',
+    'leaveBalance.entitled': 'Δικαιούστε συνολικά',
+    'leaveBalance.used': 'Έχετε ήδη χρησιμοποιήσει',
+    'leaveBalance.remaining': 'Υπόλοιπο αδείας',
+    'leaveBalance.days': 'ημέρες',
+    'leaveBalance.disclaimer':
+      'Οι ημέρες άδειας υπολογίζονται με βάση το γενικό πλαίσιο της εργατικής νομοθεσίας. Ειδικές ρυθμίσεις (κλαδικές συμβάσεις, ΣΣΕ, μερική απασχόληση) ενδέχεται να διαφοροποιούν το αποτέλεσμα. Συμβουλευτείτε τον λογιστή ή τον σύμβουλό σας.',
 
     // Severance
     'severance.title': 'Αποζημίωση Απόλυσης',
@@ -189,6 +203,8 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.vacationDesc': 'Summer leave allowance',
     'nav.severance': 'Severance',
     'nav.severanceDesc': 'Estimate based on service years',
+    'nav.leaveBalance': 'Leave balance',
+    'nav.leaveBalanceDesc': 'Annual entitlement and remaining days',
 
     // Calculator
     'calc.title': 'Payroll',
@@ -245,6 +261,18 @@ const translations: Record<Language, Record<string, string>> = {
     'bonus.vacation.payForDays': 'Vacation pay (before cap)',
     'bonus.vacation.disclaimer':
       'These calculations assume standard full-time employment. For special cases, confirm with your accountant.',
+
+    // Leave balance
+    'leaveBalance.title': 'Leave balance',
+    'leaveBalance.description': 'Calculate your annual leave entitlement for the current year.',
+    'leaveBalance.currentYear': 'Current year',
+    'leaveBalance.takenDays': 'Leave days you have already taken this year',
+    'leaveBalance.entitled': 'Total entitlement',
+    'leaveBalance.used': 'Already used',
+    'leaveBalance.remaining': 'Remaining leave',
+    'leaveBalance.days': 'days',
+    'leaveBalance.disclaimer':
+      'Leave days are calculated based on the general labour law framework. Sector agreements or part-time arrangements may change the result. Please consult your accountant or advisor.',
 
     // Severance
     'severance.title': 'Severance Pay',
