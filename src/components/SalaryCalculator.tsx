@@ -3,7 +3,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Calculator, ArrowRightLeft, TrendingUp, TrendingDown, Users } from 'lucide-react';
 import { calculateGrossToNet, calculateNetToGross, formatCurrency, type SalaryBreakdown } from '@/lib/salaryCalculations';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -95,7 +94,7 @@ export function SalaryCalculator() {
   };
 
   return (
-    <Card className="w-full max-w-lg mx-auto">
+    <Card className="w-full">
       <CardHeader className="text-center pb-2">
         <div className="mx-auto w-14 h-14 rounded-full gradient-primary flex items-center justify-center mb-4 shadow-lg">
           <Calculator className="w-7 h-7 text-primary-foreground" />
@@ -103,95 +102,79 @@ export function SalaryCalculator() {
         <CardTitle className="text-2xl">{t('calc.title')}</CardTitle>
         <CardDescription>{t('calc.description')}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <Tabs defaultValue="gross-to-net" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-6">
-            <TabsTrigger value="gross-to-net" className="gap-2">
+      <CardContent className="space-y-6">
+        <div className="space-y-2">
+          <Label htmlFor="children" className="flex items-center gap-2 justify-center">
+            <Users className="w-4 h-4" />
+            {t('calc.children')}
+          </Label>
+          <select
+            id="children"
+            value={children}
+            onChange={(e) => setChildren(parseInt(e.target.value))}
+            className="w-full h-10 px-3 rounded-lg border border-input bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
+          >
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+              <option key={num} value={num}>
+                {getChildrenLabel(num)}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          <div className="p-4 rounded-xl border border-border bg-muted/40">
+            <div className="flex items-center gap-2 mb-2">
               <TrendingDown className="w-4 h-4" />
-              {t('calc.grossToNet')}
-            </TabsTrigger>
-            <TabsTrigger value="net-to-gross" className="gap-2">
+              <p className="font-semibold">{t('calc.grossToNet')}</p>
+            </div>
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <Label htmlFor="gross">{t('calc.grossSalary')}</Label>
+                <Input
+                  id="gross"
+                  type="number"
+                  placeholder={language === 'el' ? 'π.χ. 1500' : 'e.g. 1500'}
+                  value={grossInput}
+                  onChange={(e) => setGrossInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleGrossToNet()}
+                  className="text-lg h-12"
+                />
+              </div>
+              <Button onClick={handleGrossToNet} className="w-full" size="lg">
+                <ArrowRightLeft className="w-5 h-5 mr-2" />
+                {t('calc.calculateNet')}
+              </Button>
+              {grossResult && renderBreakdown(grossResult, true, grossResultRef)}
+            </div>
+          </div>
+
+          <div className="p-4 rounded-xl border border-border bg-muted/40">
+            <div className="flex items-center gap-2 mb-2">
               <TrendingUp className="w-4 h-4" />
-              {t('calc.netToGross')}
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="gross-to-net" className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="gross">{t('calc.grossSalary')}</Label>
-              <Input
-                id="gross"
-                type="number"
-                placeholder={language === 'el' ? 'π.χ. 1500' : 'e.g. 1500'}
-                value={grossInput}
-                onChange={(e) => setGrossInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleGrossToNet()}
-                className="text-lg h-12"
-              />
+              <p className="font-semibold">{t('calc.netToGross')}</p>
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="children-gross" className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                {t('calc.children')}
-              </Label>
-              <select
-                id="children-gross"
-                value={children}
-                onChange={(e) => setChildren(parseInt(e.target.value))}
-                className="w-full h-10 px-3 rounded-lg border border-input bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              >
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                  <option key={num} value={num}>
-                    {getChildrenLabel(num)}
-                  </option>
-                ))}
-              </select>
+            <div className="space-y-3">
+              <div className="space-y-1">
+                <Label htmlFor="net">{t('calc.netSalary')}</Label>
+                <Input
+                  id="net"
+                  type="number"
+                  placeholder={language === 'el' ? 'π.χ. 1200' : 'e.g. 1200'}
+                  value={netInput}
+                  onChange={(e) => setNetInput(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleNetToGross()}
+                  className="text-lg h-12"
+                />
+              </div>
+              <Button onClick={handleNetToGross} variant="secondary" className="w-full" size="lg">
+                <ArrowRightLeft className="w-5 h-5 mr-2" />
+                {t('calc.calculateGross')}
+              </Button>
+              {netResult && renderBreakdown(netResult, false, netResultRef)}
             </div>
-            <Button onClick={handleGrossToNet} className="w-full" size="lg">
-              <ArrowRightLeft className="w-5 h-5 mr-2" />
-              {t('calc.calculateNet')}
-            </Button>
-            {grossResult && renderBreakdown(grossResult, true, grossResultRef)}
-          </TabsContent>
-
-          <TabsContent value="net-to-gross" className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="net">{t('calc.netSalary')}</Label>
-              <Input
-                id="net"
-                type="number"
-                placeholder={language === 'el' ? 'π.χ. 1200' : 'e.g. 1200'}
-                value={netInput}
-                onChange={(e) => setNetInput(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && handleNetToGross()}
-                className="text-lg h-12"
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="children-net" className="flex items-center gap-2">
-                <Users className="w-4 h-4" />
-                {t('calc.children')}
-              </Label>
-              <select
-                id="children-net"
-                value={children}
-                onChange={(e) => setChildren(parseInt(e.target.value))}
-                className="w-full h-10 px-3 rounded-lg border border-input bg-card text-foreground focus:outline-none focus:ring-2 focus:ring-ring"
-              >
-                {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-                  <option key={num} value={num}>
-                    {getChildrenLabel(num)}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <Button onClick={handleNetToGross} variant="secondary" className="w-full" size="lg">
-              <ArrowRightLeft className="w-5 h-5 mr-2" />
-              {t('calc.calculateGross')}
-            </Button>
-            {netResult && renderBreakdown(netResult, false, netResultRef)}
-          </TabsContent>
-        </Tabs>
+          </div>
+        </div>
       </CardContent>
     </Card>
   );
