@@ -367,29 +367,32 @@ export function YearlySummary() {
                 </div>
               </div>
             )}
-
-            <div className="p-4 rounded-xl bg-secondary/5 border border-secondary/20">
-              <div className="flex items-start gap-3">
-                <PiggyBank className="w-6 h-6 text-secondary flex-shrink-0 mt-0.5" />
+                <div className="p-4 rounded-xl bg-secondary/5 border border-secondary/20">
+                  <div className="flex items-start gap-3">
+                    <PiggyBank className="w-6 h-6 text-secondary flex-shrink-0 mt-0.5" />
                 <div>
-                  <h5 className="font-semibold text-foreground mb-1">{t('yearly.prediction')}</h5>
+                  <h5 className="font-semibold text-foreground mb-1">
+                    {t('yearly.prediction')}
+                  </h5>
                   <p className="text-sm text-muted-foreground">
                     {t('yearly.predictionText')}{' '}
-                    <strong className="text-foreground">{formatCurrency(summary.totalGross - summary.totalEfkaEmployee.{' '})}</strong>
+                    <strong className="text-foreground">
+                      {formatCurrency(summary.totalGross - summary.totalEfkaEmployee)}
+                    </strong>
                     . {t('yearly.withheldTax')}{' '}
-                    <strong className="text-foreground">{formatCurrency(summary.totalIncomeTax)}</strong>.
-
+                    <strong className="text-foreground">
+                      {formatCurrency(summary.totalIncomeTax)}
+                    </strong>
+                    .
                     {comparison && comparison.extraTax > 0 && (
-                    <>
-                      {' '}
-                      {t('yearly.refundIntro')}{' '}
-                      <strong>{formatCurrency(comparison.extraTax)}</strong>{' '}
-                      {t('yearly.refundLikely')}
-                    </>
-                  )}
-                  
-                  {' '}
-                  {t('yearly.refundDisclaimer')}
+                      <>
+                        {' '}
+                        {t('yearly.refundIntro')}{' '}
+                        <strong>{formatCurrency(comparison.extraTax)}</strong>{' '}
+                        {t('yearly.refundLikely')}
+                      </>
+                    )}{' '}
+                    {t('yearly.refundDisclaimer')}
                   </p>
                 </div>
               </div>
