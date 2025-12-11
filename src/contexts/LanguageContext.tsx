@@ -138,7 +138,8 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Yearly
     'yearly.title': 'Ετήσια Σύνοψη',
-    'yearly.description': 'Καταχωρήστε τους μισθούς σας για πρόβλεψη φορολογικής δήλωσης',
+    'yearly.description':
+      'Η ετήσια σύνοψη βασίζεται σε 12 μισθούς, ½ μισθό ως Δώρο Πάσχα, ½ μισθό ως Επίδομα Άδειας και 1 μισθό ως Δώρο Χριστουγέννων, καθώς και στις αντίστοιχες προσαυξήσεις τους.',
     'yearly.month': 'Μήνας',
     'yearly.grossSalary': 'Μικτός Μισθός (€)',
     'yearly.children.short': 'Τέκνα',
@@ -305,7 +306,8 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Yearly
     'yearly.title': 'Yearly Summary',
-    'yearly.description': 'Enter your salaries for tax return prediction',
+    'yearly.description':
+      'The yearly summary uses 12 salaries, half a salary as Easter bonus, half as vacation allowance, and one full salary as the Christmas bonus, including their respective increments.',
     'yearly.month': 'Month',
     'yearly.grossSalary': 'Gross Salary (€)',
     'yearly.children.short': 'Children',

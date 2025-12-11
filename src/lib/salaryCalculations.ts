@@ -143,40 +143,80 @@ export interface YearlySummary {
   monthlySalaries: { month: string; gross: number; net: number }[];
 }
 
-export function calculateYearlySummary(salaries: { month: string; gross: number }[], children: number = 0): YearlySummary {
-  const totals = salaries.reduce(
-    (acc, salary) => {
-      const breakdown = calculateGrossToNet(salary.gross, 1, children);
+type PaymentType = 'regular' | 'easter' | 'christmas' | 'vacation';
 
-      acc.totalGross += salary.gross;
-      acc.totalEfkaEmployee += breakdown.efkaEmployee;
-      acc.totalEfkaEmployer += breakdown.efkaEmployer;
-      acc.totalIncomeTax += breakdown.incomeTax;
-      acc.totalSolidarityTax += breakdown.solidarityTax;
-      acc.totalDeductions += breakdown.totalDeductions;
-      acc.totalNet += breakdown.netSalary;
+function getPaymentType(monthLabel: string): PaymentType {
+  const label = monthLabel.toLowerCase();
 
-      acc.monthlySalaries.push({
-        month: salary.month,
-        gross: salary.gross,
-        net: breakdown.netSalary,
-      });
+  if (label.includes('πάσχα') || label.includes('easter')) return 'easter';
+  if (label.includes('χριστουγέν') || label.includes('christmas')) return 'christmas';
+  if (label.includes('άδει') || label.includes('vacation')) return 'vacation';
+  return 'regular';
+}
 
-      return acc;
-    },
-    {
-      totalGross: 0,
-      totalNet: 0,
-      totalEfkaEmployee: 0,
-      totalEfkaEmployer: 0,
-      totalIncomeTax: 0,
-      totalSolidarityTax: 0,
-      totalDeductions: 0,
-      monthlySalaries: [] as { month: string; gross: number; net: number }[],
+function getPaymentGross(baseGross: number, type: PaymentType): number {
+  switch (type) {
+    case 'easter': {
+      const base = baseGross * 0.5;
+      return base + base / 24; // include vacation allowance increment
     }
-  );
+    case 'christmas': {
+      const base = baseGross; // full monthly salary
+      return base + base / 24; // include vacation allowance increment
+    }
+    case 'vacation':
+      return baseGross * 0.5; // allowance capped at half salary
+    default:
+      return baseGross; // regular monthly salary
+  }
+}
 
-  return totals;
+export function calculateYearlySummary(
+  salaries: { month: string; gross: number }[],
+  children: number = 0
+): YearlySummary {
+  const payments = salaries.map((salary) => {
+    const type = getPaymentType(salary.month);
+    const paymentGross = getPaymentGross(salary.gross, type);
+
+    return {
+      ...salary,
+      type,
+      paymentGross,
+    };
+  });
+
+  const totalGross = payments.reduce((sum, payment) => sum + payment.paymentGross, 0);
+  const totalEfkaEmployee = totalGross * EFKA_EMPLOYEE_RATE;
+  const totalEfkaEmployer = totalGross * EFKA_EMPLOYER_RATE;
+  const totalIncomeTax = calculateIncomeTax(totalGross - totalEfkaEmployee, children);
+  const totalSolidarityTax = SOLIDARITY_SUSPENDED ? 0 : calculateIncomeTax(totalGross - totalEfkaEmployee, children);
+  const totalDeductions = totalEfkaEmployee + totalIncomeTax + totalSolidarityTax;
+  const totalNet = totalGross - totalDeductions;
+
+  const monthlySalaries = payments.map(({ month, paymentGross }) => {
+    if (totalGross === 0) {
+      return { month, gross: 0, net: 0 };
+    }
+
+    const proportion = paymentGross / totalGross;
+    return {
+      month,
+      gross: paymentGross,
+      net: totalNet * proportion,
+    };
+  });
+
+  return {
+    totalGross,
+    totalNet,
+    totalEfkaEmployee,
+    totalEfkaEmployer,
+    totalIncomeTax,
+    totalSolidarityTax,
+    totalDeductions,
+    monthlySalaries,
+  };
 }
 
 export const GREEK_MONTHS = [
