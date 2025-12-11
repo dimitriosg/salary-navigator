@@ -160,6 +160,7 @@ export interface YearlySummary {
   monthlySalaries: { month: string; gross: number; net: number }[];
   bonusBreakdown: BonusBreakdown;
   simpleAnnualGross14: number;
+  totalGrossWithIncrements: number;
   baseMonthlyGross: number;
 }
 
@@ -300,6 +301,16 @@ export function calculateYearlySummary(
     totalNet: easterLine.net + christmasLine.net + vacationLine.net,
   };
 
+  const simpleAnnualGross14 = baseMonthlyGross * 14;
+  const easterBase = baseMonthlyGross / 2;
+  const christmasBase = baseMonthlyGross;
+  const vacationBase = baseMonthlyGross / 2;
+  const easterIncrement = Math.max(0, easter.gross - easterBase);
+  const christmasIncrement = Math.max(0, christmas.gross - christmasBase);
+  const vacationIncrement = Math.max(0, vacation.gross - vacationBase);
+  const totalGrossWithIncrements =
+    simpleAnnualGross14 + easterIncrement + christmasIncrement + vacationIncrement;
+
   return {
     totalGross,
     totalNet,
@@ -310,7 +321,8 @@ export function calculateYearlySummary(
     totalDeductions,
     monthlySalaries,
     bonusBreakdown,
-    simpleAnnualGross14: baseMonthlyGross * 14,
+    simpleAnnualGross14,
+    totalGrossWithIncrements,
     baseMonthlyGross,
   };
 }

@@ -321,7 +321,7 @@ export function YearlySummary() {
                       <div className="text-right">
                         <div className="font-medium text-foreground">{formatCurrency(item.gross)}</div>
                         <div className="text-xs text-muted-foreground">
-                          {t('yearly.netAmount', { amount: formatCurrency(item.net) })}
+                          {t('yearly.netAmountLabel')} {formatCurrency(item.net)}
                         </div>
                       </div>
                     </div>
@@ -345,7 +345,7 @@ export function YearlySummary() {
               <div className="p-4 rounded-xl bg-muted/70">
                 <p className="text-sm text-muted-foreground mb-1">{t('yearly.grossWithIncrements')}</p>
                 <p className="text-2xl font-display font-bold text-foreground">
-                  {formatCurrency(summary.totalGross)}
+                  {formatCurrency(summary.totalGrossWithIncrements)}
                 </p>
               </div>
               <div className="p-4 rounded-xl bg-secondary/10">
