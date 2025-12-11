@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { CalendarDays, PiggyBank, Receipt, FileText, Trash2, Plus, Users, Pencil, Check, X, TrendingUp, TrendingDown } from 'lucide-react';
+import { CalendarDays, PiggyBank, Receipt, FileText, Trash2, Plus, Users, Pencil, Check, X, TrendingUp, TrendingDown, Gift } from 'lucide-react';
 import { calculateYearlySummary, formatCurrency, GREEK_MONTHS, type YearlySummary as YearlySummaryType } from '@/lib/salaryCalculations';
 import { parseNumericExpression } from '@/lib/numberUtils';
 import { useLanguage } from '@/contexts/LanguageContext';
