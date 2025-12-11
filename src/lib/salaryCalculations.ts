@@ -132,6 +132,37 @@ export function calculateNetToGross(monthlyNet: number, months: number = 14, chi
   return result || calculateGrossToNet(high, months, children);
 }
 
+export interface BonusLineBreakdown {
+  gross: number;
+  net: number;
+  efkaEmployee: number;
+  efkaEmployer: number;
+  incomeTax: number;
+  totalDeductions: number;
+}
+
+interface BonusCalculationResult {
+  baseGross: number;
+  vacationAddonGross: number;
+  totalGross: number;
+  daysInPeriod: number;
+  periodDays: number;
+}
+
+interface VacationAllowanceCalculationResult {
+  baseGross: number;
+  totalGross: number;
+  leaveDays: number;
+}
+
+export interface BonusBreakdown {
+  easter: BonusLineBreakdown;
+  christmas: BonusLineBreakdown;
+  vacation: BonusLineBreakdown;
+  totalGross: number;
+  totalNet: number;
+}
+
 export interface YearlySummary {
   totalGross: number;
   totalNet: number;
@@ -141,41 +172,189 @@ export interface YearlySummary {
   totalSolidarityTax: number;
   totalDeductions: number;
   monthlySalaries: { month: string; gross: number; net: number }[];
+  bonusBreakdown: BonusBreakdown;
+  simpleAnnualGross14: number;
+  totalGrossWithIncrements: number;
+  baseMonthlyGross: number;
 }
 
-export function calculateYearlySummary(salaries: { month: string; gross: number }[], children: number = 0): YearlySummary {
-  const totalGross = salaries.reduce((sum, s) => sum + s.gross, 0);
-  
-  // Calculate annual tax based on total income
-  const annualEfkaEmployee = totalGross * EFKA_EMPLOYEE_RATE;
-  const annualEfkaEmployer = totalGross * EFKA_EMPLOYER_RATE;
-  const taxableIncome = totalGross - annualEfkaEmployee;
-  const annualIncomeTax = calculateIncomeTax(taxableIncome, children);
-  const annualSolidarityTax = 0; // Suspended
-  const totalDeductions = annualEfkaEmployee + annualIncomeTax + annualSolidarityTax;
+const roundTo2 = (value: number) => Math.round(value * 100) / 100;
+
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+function differenceInDaysInclusive(start: Date, end: Date): number {
+  const startTime = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
+  const endTime = new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime();
+  return Math.floor((endTime - startTime) / (1000 * 60 * 60 * 24)) + 1;
+}
+
+function calculateEasterBonusGross(
+  monthlyGross: number,
+  referenceYear: number = new Date().getFullYear(),
+  employmentStart?: Date,
+  employmentEnd?: Date
+): BonusCalculationResult {
+  const periodStart = new Date(referenceYear, 0, 1);
+  const periodEnd = new Date(referenceYear, 3, 30);
+  const actualStart = employmentStart ? new Date(Math.max(employmentStart.getTime(), periodStart.getTime())) : periodStart;
+  const effectiveEnd = employmentEnd ?? periodEnd;
+  const actualEnd = new Date(Math.min(effectiveEnd.getTime(), periodEnd.getTime()));
+
+  const daysInPeriod = actualEnd < actualStart ? 0 : differenceInDaysInclusive(actualStart, actualEnd);
+  const periodDays = differenceInDaysInclusive(periodStart, periodEnd);
+  const baseGross = roundTo2(0.5 * monthlyGross * clamp(daysInPeriod, 0, periodDays) / periodDays);
+  const vacationAddonGross = roundTo2(baseGross * 0.041666);
+  const totalGross = roundTo2(baseGross + vacationAddonGross);
+
+  // Example sanity check (monthly-paid, 5-day, €1,725 from 1/1–31/12 with 20 leave days):
+  // Easter gross should be close to half salary (~€862.50) with vacation addon near €35.94 for full period employment.
+
+  return { baseGross, vacationAddonGross, totalGross, daysInPeriod, periodDays };
+}
+
+function calculateChristmasBonusGross(
+  monthlyGross: number,
+  referenceYear: number = new Date().getFullYear(),
+  employmentStart?: Date,
+  employmentEnd?: Date
+): BonusCalculationResult {
+  const periodStart = new Date(referenceYear, 4, 1);
+  const periodEnd = new Date(referenceYear, 11, 31);
+  const actualStart = employmentStart ? new Date(Math.max(employmentStart.getTime(), periodStart.getTime())) : periodStart;
+  const effectiveEnd = employmentEnd ?? periodEnd;
+  const actualEnd = new Date(Math.min(effectiveEnd.getTime(), periodEnd.getTime()));
+
+  const daysInPeriod = actualEnd < actualStart ? 0 : differenceInDaysInclusive(actualStart, actualEnd);
+  const periodDays = differenceInDaysInclusive(periodStart, periodEnd);
+  const baseGross = roundTo2(1 * monthlyGross * clamp(daysInPeriod, 0, periodDays) / periodDays);
+  const vacationAddonGross = roundTo2(baseGross * 0.041666);
+  const totalGross = roundTo2(baseGross + vacationAddonGross);
+
+  // Example sanity check (monthly-paid, 5-day, €1,725 from 1/1–31/12):
+  // Christmas gross should be close to one salary (~€1,725) with vacation addon near €71.88 for full period employment.
+
+  return { baseGross, vacationAddonGross, totalGross, daysInPeriod, periodDays };
+}
+
+function calculateVacationAllowanceGross(
+  monthlyGross: number,
+  leaveDays: number
+): VacationAllowanceCalculationResult {
+  const dailyWage = monthlyGross / 25;
+  const vacationPay = dailyWage * leaveDays;
+  const halfSalary = monthlyGross / 2;
+  const baseGross = roundTo2(Math.min(vacationPay, halfSalary));
+
+  // Example sanity check continuation: with 20 leave days and €1,725 monthly,
+  // daily wage ~€69, leading to vacation allowance capped near half salary (~€862.50).
+
+  return { baseGross, totalGross: baseGross, leaveDays };
+}
+
+export function calculateYearlySummary(
+  salaries: { month: string; gross: number }[],
+  children: number = 0,
+  options?: { referenceYear?: number; leaveDays?: number; employmentStart?: Date; employmentEnd?: Date }
+): YearlySummary {
+  const totalRegularGross = salaries.reduce((sum, salary) => sum + salary.gross, 0);
+  const monthsCount = salaries.length || 1;
+
+  // Determine a representative base salary for bonuses by using the most frequent
+  // monthly value (mode). This avoids inflating bonuses when occasional months
+  // include overtime or other extras. In case of a tie, the lowest repeated value
+  // is chosen to stay conservative.
+  const occurrences = salaries.reduce((map, { gross }) => {
+    const roundedGross = roundTo2(gross);
+    map.set(roundedGross, (map.get(roundedGross) || 0) + 1);
+    return map;
+  }, new Map<number, number>());
+
+  let baseMonthlyGross = totalRegularGross / monthsCount;
+  if (occurrences.size > 0) {
+    let maxCount = 0;
+    let candidateGrosses: number[] = [];
+
+    occurrences.forEach((count, gross) => {
+      if (count > maxCount) {
+        maxCount = count;
+        candidateGrosses = [gross];
+      } else if (count === maxCount) {
+        candidateGrosses.push(gross);
+      }
+    });
+
+    baseMonthlyGross = Math.min(...candidateGrosses);
+  }
+  const referenceYear = options?.referenceYear ?? new Date().getFullYear();
+  const leaveDays = options?.leaveDays ?? 20;
+
+  const easter = calculateEasterBonusGross(baseMonthlyGross, referenceYear, options?.employmentStart, options?.employmentEnd);
+  const christmas = calculateChristmasBonusGross(baseMonthlyGross, referenceYear, options?.employmentStart, options?.employmentEnd);
+  const vacation = calculateVacationAllowanceGross(baseMonthlyGross, leaveDays);
+
+  const bonusGrossTotal = easter.totalGross + christmas.totalGross + vacation.totalGross;
+  const totalGross = totalRegularGross + bonusGrossTotal;
+
+  const totalEfkaEmployee = totalGross * EFKA_EMPLOYEE_RATE;
+  const totalEfkaEmployer = totalGross * EFKA_EMPLOYER_RATE;
+  const taxableIncome = totalGross - totalEfkaEmployee;
+  const totalIncomeTax = calculateIncomeTax(taxableIncome, children);
+  const totalSolidarityTax = SOLIDARITY_SUSPENDED ? 0 : calculateIncomeTax(taxableIncome, children);
+  const totalDeductions = totalEfkaEmployee + totalIncomeTax + totalSolidarityTax;
   const totalNet = totalGross - totalDeductions;
 
-  // Calculate monthly net for each salary entry
-  // Note: This is approximate as tax is calculated annually
-  const monthlySalaries = salaries.map(s => {
-    const monthlyEfka = s.gross * EFKA_EMPLOYEE_RATE;
-    const monthlyTax = (annualIncomeTax / totalGross) * s.gross;
+  const buildLine = (gross: number): BonusLineBreakdown => {
+    const efkaEmployee = gross * EFKA_EMPLOYEE_RATE;
+    const efkaEmployer = gross * EFKA_EMPLOYER_RATE;
+    const taxablePortion = taxableIncome > 0 ? (gross - efkaEmployee) / taxableIncome : 0;
+    const incomeTaxShare = totalIncomeTax * taxablePortion;
+    const net = gross - efkaEmployee - incomeTaxShare - (totalSolidarityTax * taxablePortion || 0);
+    const totalLineDeductions = efkaEmployee + incomeTaxShare + (totalSolidarityTax * taxablePortion || 0);
+
     return {
-      month: s.month,
-      gross: s.gross,
-      net: s.gross - monthlyEfka - monthlyTax,
+      gross,
+      net,
+      efkaEmployee,
+      efkaEmployer,
+      incomeTax: incomeTaxShare,
+      totalDeductions: totalLineDeductions,
     };
-  });
+  };
+
+  const monthlySalaries = salaries.map(({ month, gross }) => ({
+    month,
+    gross,
+    net: buildLine(gross).net,
+  }));
+
+  const easterLine = buildLine(easter.totalGross);
+  const christmasLine = buildLine(christmas.totalGross);
+  const vacationLine = buildLine(vacation.totalGross);
+
+  const bonusBreakdown: BonusBreakdown = {
+    easter: easterLine,
+    christmas: christmasLine,
+    vacation: vacationLine,
+    totalGross: bonusGrossTotal,
+    totalNet: easterLine.net + christmasLine.net + vacationLine.net,
+  };
+
+  const simpleAnnualGross14 = baseMonthlyGross * 14;
+  const totalGrossWithIncrements = totalGross;
 
   return {
     totalGross,
     totalNet,
-    totalEfkaEmployee: annualEfkaEmployee,
-    totalEfkaEmployer: annualEfkaEmployer,
-    totalIncomeTax: annualIncomeTax,
-    totalSolidarityTax: annualSolidarityTax,
+    totalEfkaEmployee,
+    totalEfkaEmployer,
+    totalIncomeTax,
+    totalSolidarityTax,
     totalDeductions,
     monthlySalaries,
+    bonusBreakdown,
+    simpleAnnualGross14,
+    totalGrossWithIncrements,
+    baseMonthlyGross,
   };
 }
 
@@ -192,8 +371,6 @@ export const GREEK_MONTHS = [
   'Οκτώβριος',
   'Νοέμβριος',
   'Δεκέμβριος',
-  'Δώρο Πάσχα',
-  'Δώρο Χριστουγέννων',
 ];
 
 export function formatCurrency(amount: number): string {

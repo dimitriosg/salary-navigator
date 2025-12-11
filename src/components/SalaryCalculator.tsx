@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calculator, ArrowRightLeft, TrendingUp, TrendingDown, Users } from 'lucide-react';
 import { calculateGrossToNet, calculateNetToGross, formatCurrency, type SalaryBreakdown } from '@/lib/salaryCalculations';
+import { parseNumericExpression } from '@/lib/numberUtils';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export function SalaryCalculator() {
@@ -30,15 +31,19 @@ export function SalaryCalculator() {
   const handleGrossChange = (value: string) => {
     setActiveSide('gross');
     setGrossInput(value);
+<<<<<<< HEAD
     const gross = parseFloat(value);
     if (!isNaN(gross) && gross > 0) {
       recalcFromGross(gross);
     }
+=======
+>>>>>>> codex/check-calculations-for-bonuses
   };
 
   const handleNetChange = (value: string) => {
     setActiveSide('net');
     setNetInput(value);
+<<<<<<< HEAD
     const net = parseFloat(value);
     if (!isNaN(net) && net > 0) {
       recalcFromNet(net);
@@ -50,10 +55,24 @@ export function SalaryCalculator() {
     if (!isNaN(gross) && gross > 0) {
       setActiveSide('gross');
       recalcFromGross(gross);
+=======
+  };
+
+  const handleGrossToNet = () => {
+    const gross = parseNumericExpression(grossInput);
+    if (gross !== null && gross > 0) {
+      setActiveSide('gross');
+      const formatted = gross.toFixed(2);
+      setGrossInput(formatted);
+      recalcFromGross(gross);
+    } else if (breakdown) {
+      setGrossInput(breakdown.grossSalary.toFixed(2));
+>>>>>>> codex/check-calculations-for-bonuses
     }
   };
 
   const handleNetToGross = () => {
+<<<<<<< HEAD
     const net = parseFloat(netInput);
     if (!isNaN(net) && net > 0) {
       setActiveSide('net');
@@ -61,6 +80,37 @@ export function SalaryCalculator() {
     }
   };
 
+=======
+    const net = parseNumericExpression(netInput);
+    if (net !== null && net > 0) {
+      setActiveSide('net');
+      const formatted = net.toFixed(2);
+      setNetInput(formatted);
+      recalcFromNet(net);
+    } else if (breakdown) {
+      setNetInput(breakdown.netSalary.toFixed(2));
+    }
+  };
+
+  const commitGrossInput = () => {
+    const gross = parseNumericExpression(grossInput);
+    if (gross !== null && gross > 0) {
+      const formatted = gross.toFixed(2);
+      setGrossInput(formatted);
+      recalcFromGross(gross);
+    }
+  };
+
+  const commitNetInput = () => {
+    const net = parseNumericExpression(netInput);
+    if (net !== null && net > 0) {
+      const formatted = net.toFixed(2);
+      setNetInput(formatted);
+      recalcFromNet(net);
+    }
+  };
+
+>>>>>>> codex/check-calculations-for-bonuses
   const renderBreakdown = (result: SalaryBreakdown, isGrossToNet: boolean) => (
     <div className="mt-6 space-y-4 animate-slide-up">
       <div className="grid grid-cols-2 gap-4">
@@ -179,11 +229,25 @@ export function SalaryCalculator() {
                 <Label htmlFor="gross">{t('calc.grossSalary')}</Label>
                 <Input
                   id="gross"
+<<<<<<< HEAD
                   type="number"
                   placeholder={language === 'el' ? 'π.χ. 1500' : 'e.g. 1500'}
                   value={grossInput}
                   onChange={(e) => handleGrossChange(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleGrossToNet()}
+=======
+                  type="text"
+                  placeholder={language === 'el' ? 'π.χ. 1500' : 'e.g. 1500'}
+                  value={grossInput}
+                  onChange={(e) => handleGrossChange(e.target.value)}
+                  onBlur={commitGrossInput}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleGrossToNet();
+                    }
+                  }}
+>>>>>>> codex/check-calculations-for-bonuses
                   className="text-lg h-12"
                 />
               </div>
@@ -205,11 +269,25 @@ export function SalaryCalculator() {
                 <Label htmlFor="net">{t('calc.netSalary')}</Label>
                 <Input
                   id="net"
+<<<<<<< HEAD
                   type="number"
                   placeholder={language === 'el' ? 'π.χ. 1200' : 'e.g. 1200'}
                   value={netInput}
                   onChange={(e) => handleNetChange(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleNetToGross()}
+=======
+                  type="text"
+                  placeholder={language === 'el' ? 'π.χ. 1200' : 'e.g. 1200'}
+                  value={netInput}
+                  onChange={(e) => handleNetChange(e.target.value)}
+                  onBlur={commitNetInput}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleNetToGross();
+                    }
+                  }}
+>>>>>>> codex/check-calculations-for-bonuses
                   className="text-lg h-12"
                 />
               </div>

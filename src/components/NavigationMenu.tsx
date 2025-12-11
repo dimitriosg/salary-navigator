@@ -4,13 +4,21 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const links = [
   { to: '/', icon: Calculator, labelKey: 'nav.payroll', descriptionKey: 'nav.payrollDesc' },
+<<<<<<< HEAD
   { to: '/yearly', icon: CalendarDays, labelKey: 'nav.yearly', descriptionKey: 'nav.yearlyDesc' },
   { to: '/employer', icon: Landmark, labelKey: 'nav.employer', descriptionKey: 'nav.employerDesc' },
+=======
+>>>>>>> codex/check-calculations-for-bonuses
   { to: '/easter-bonus', icon: Gift, labelKey: 'nav.easter', descriptionKey: 'nav.easterDesc' },
   { to: '/christmas-bonus', icon: Gift, labelKey: 'nav.christmas', descriptionKey: 'nav.christmasDesc' },
   { to: '/vacation-allowance', icon: Umbrella, labelKey: 'nav.vacation', descriptionKey: 'nav.vacationDesc' },
   { to: '/severance', icon: Briefcase, labelKey: 'nav.severance', descriptionKey: 'nav.severanceDesc' },
   { to: '/leave-balance', icon: CalendarCheck, labelKey: 'nav.leaveBalance', descriptionKey: 'nav.leaveBalanceDesc' },
+<<<<<<< HEAD
+=======
+  { to: '/employer', icon: Landmark, labelKey: 'nav.employer', descriptionKey: 'nav.employerDesc' },
+  { to: '/yearly', icon: CalendarDays, labelKey: 'nav.yearly', descriptionKey: 'nav.yearlyDesc', beta: true },
+>>>>>>> codex/check-calculations-for-bonuses
 ];
 
 export function NavigationMenu() {
@@ -25,17 +33,33 @@ export function NavigationMenu() {
           <p className="text-sm text-muted-foreground">{t('nav.subtitle')}</p>
         </div>
         <nav className="divide-y divide-border" role="navigation">
+<<<<<<< HEAD
           {links.map(({ to, icon: Icon, labelKey, descriptionKey }) => {
+=======
+          {links.map(({ to, icon: Icon, labelKey, descriptionKey, beta }) => {
+>>>>>>> codex/check-calculations-for-bonuses
             const active = to === '/' ? location.pathname === '/' : location.pathname.startsWith(to);
             return (
               <Link
                 key={to}
                 to={to}
                 aria-current={active ? 'page' : undefined}
+<<<<<<< HEAD
                 className={`flex items-start gap-3 p-4 transition-colors ${
                   active ? 'bg-primary/10' : 'hover:bg-muted/60'
                 }`}
               >
+=======
+                className={`relative flex items-start gap-3 p-4 transition-colors ${
+                  active ? 'bg-primary/10' : 'hover:bg-muted/60'
+                }`}
+              >
+                {beta && (
+                  <span className="absolute right-2 top-2 rotate-12 bg-red-600 text-white px-4 py-1 text-[10px] font-semibold shadow-lg z-10">
+                    BETA
+                  </span>
+                )}
+>>>>>>> codex/check-calculations-for-bonuses
                 <div
                   className={`w-10 h-10 rounded-lg flex items-center justify-center ${
                     active ? 'gradient-primary text-primary-foreground' : 'bg-muted text-foreground'

@@ -6,6 +6,10 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { differenceInDaysInclusive, getDaysOverlap } from '@/lib/dateUtils';
 import { calculateAnnualLeaveDays } from '@/lib/leaveCalculations';
 import { calculateGrossToNet, formatCurrency, type SalaryBreakdown } from '@/lib/salaryCalculations';
+<<<<<<< HEAD
+=======
+import { parseNumericExpression } from '@/lib/numberUtils';
+>>>>>>> codex/check-calculations-for-bonuses
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -73,8 +77,13 @@ export function BonusCalculator({ type }: BonusCalculatorProps) {
   }, [hireDateValue, today]);
 
   const handleCalculate = () => {
+<<<<<<< HEAD
     const gross = parseFloat(monthlyGross);
     if (isNaN(gross) || gross <= 0 || !hireDateValue) return;
+=======
+    const gross = parseNumericExpression(monthlyGross);
+    if (gross === null || gross <= 0 || !hireDateValue) return;
+>>>>>>> codex/check-calculations-for-bonuses
 
     if (type === 'vacation') {
       const leaveDays = calculateAnnualLeaveDays(hireDateValue, today, weekType, hiredThisYear);
@@ -103,10 +112,29 @@ export function BonusCalculator({ type }: BonusCalculatorProps) {
         <Label htmlFor="monthly-gross">{t('bonus.monthlyGross')}</Label>
         <Input
           id="monthly-gross"
+<<<<<<< HEAD
           type="number"
           placeholder="1500"
           value={monthlyGross}
           onChange={(e) => setMonthlyGross(e.target.value)}
+=======
+          type="text"
+          placeholder="1500"
+          value={monthlyGross}
+          onChange={(e) => setMonthlyGross(e.target.value)}
+          onBlur={() => {
+            const parsed = parseNumericExpression(monthlyGross);
+            if (parsed !== null && parsed > 0) {
+              setMonthlyGross(parsed.toFixed(2));
+            }
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              handleCalculate();
+            }
+          }}
+>>>>>>> codex/check-calculations-for-bonuses
           className="h-12"
         />
       </div>

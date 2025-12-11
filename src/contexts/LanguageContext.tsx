@@ -138,7 +138,8 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Yearly
     'yearly.title': 'Ετήσια Σύνοψη',
-    'yearly.description': 'Καταχωρήστε τους μισθούς σας για πρόβλεψη φορολογικής δήλωσης',
+    'yearly.description':
+      'Η ετήσια σύνοψη βασίζεται σε 12 μισθούς, ½ μισθό ως Δώρο Πάσχα, ½ μισθό ως Επίδομα Άδειας και 1 μισθό ως Δώρο Χριστουγέννων, καθώς και στις αντίστοιχες προσαυξήσεις τους.',
     'yearly.month': 'Μήνας',
     'yearly.grossSalary': 'Μικτός Μισθός (€)',
     'yearly.children.short': 'Τέκνα',
@@ -147,8 +148,10 @@ const translations: Record<Language, Record<string, string>> = {
     'yearly.sameYear': 'Ίδιος μισθός όλη τη χρονιά',
     'yearly.registered': 'Καταχωρημένοι Μισθοί',
     'yearly.editHint': '(κλικ στο μολύβι για επεξεργασία)',
-    'yearly.yearlyGross': 'Ετήσια Μικτά',
+    'yearly.simpleGross14': 'Ετήσια Μικτά (μισθός ×14)',
+    'yearly.grossWithIncrements': 'Συνολικά Μικτά με προσαυξήσεις',
     'yearly.yearlyNet': 'Ετήσια Καθαρά',
+    'yearly.netAmountLabel': 'Καθαρά:',
     'yearly.taxDeclaration': 'Στοιχεία για Φορολογική Δήλωση',
     'yearly.efkaEmployee': 'ΕΦΚΑ Εργαζομένου',
     'yearly.incomeTax': 'Φόρος Εισοδήματος',
@@ -170,6 +173,13 @@ const translations: Record<Language, Record<string, string>> = {
       'η οποία πιθανότατα θα εμφανιστεί ως επιστροφή φόρου στην επόμενη φορολογική σας δήλωση.',
     'yearly.refundDisclaimer':
       '* Οι παραπάνω υπολογισμοί είναι ενδεικτικοί και δεν αποτελούν φορολογική ή λογιστική συμβουλή. Επιβεβαιώστε τα τελικά ποσά με τον λογιστή σας.',
+<<<<<<< HEAD
+=======
+    'yearly.bonusSectionTitle': 'Δώρα & Επίδομα Άδειας',
+    'yearly.easterBonus': 'Δώρο Πάσχα',
+    'yearly.christmasBonus': 'Δώρο Χριστουγέννων',
+    'yearly.vacationAllowance': 'Επίδομα άδειας',
+>>>>>>> codex/check-calculations-for-bonuses
 
     // Common
     'common.yes': 'Ναι',
@@ -305,7 +315,8 @@ const translations: Record<Language, Record<string, string>> = {
 
     // Yearly
     'yearly.title': 'Yearly Summary',
-    'yearly.description': 'Enter your salaries for tax return prediction',
+    'yearly.description':
+      'The yearly summary uses 12 salaries, half a salary as Easter bonus, half as vacation allowance, and one full salary as the Christmas bonus, including their respective increments.',
     'yearly.month': 'Month',
     'yearly.grossSalary': 'Gross Salary (€)',
     'yearly.children.short': 'Children',
@@ -314,8 +325,10 @@ const translations: Record<Language, Record<string, string>> = {
     'yearly.sameYear': 'Same salary for the whole year',
     'yearly.registered': 'Registered Salaries',
     'yearly.editHint': '(click pencil to edit)',
-    'yearly.yearlyGross': 'Yearly Gross',
+    'yearly.simpleGross14': 'Annual gross (salary ×14)',
+    'yearly.grossWithIncrements': 'Total gross with increments',
     'yearly.yearlyNet': 'Yearly Net',
+    'yearly.netAmountLabel': 'Net:',
     'yearly.taxDeclaration': 'Tax Declaration Details',
     'yearly.efkaEmployee': 'EFKA Employee',
     'yearly.incomeTax': 'Income Tax',
@@ -337,6 +350,13 @@ const translations: Record<Language, Record<string, string>> = {
       'which is likely to appear as a tax refund in your next tax return.',
     'yearly.refundDisclaimer':
       '* The above calculations are indicative and do not constitute tax or accounting advice. Please confirm the final amounts with your accountant.',
+<<<<<<< HEAD
+=======
+    'yearly.bonusSectionTitle': 'Bonuses & Vacation Allowance',
+    'yearly.easterBonus': 'Easter bonus',
+    'yearly.christmasBonus': 'Christmas bonus',
+    'yearly.vacationAllowance': 'Vacation allowance',
+>>>>>>> codex/check-calculations-for-bonuses
 
     // Common
     'common.yes': 'Yes',
