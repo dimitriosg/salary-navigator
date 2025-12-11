@@ -141,6 +141,20 @@ export interface BonusLineBreakdown {
   totalDeductions: number;
 }
 
+interface BonusCalculationResult {
+  baseGross: number;
+  vacationAddonGross: number;
+  totalGross: number;
+  daysInPeriod: number;
+  periodDays: number;
+}
+
+interface VacationAllowanceCalculationResult {
+  baseGross: number;
+  totalGross: number;
+  leaveDays: number;
+}
+
 export interface BonusBreakdown {
   easter: BonusLineBreakdown;
   christmas: BonusLineBreakdown;
@@ -179,23 +193,23 @@ function calculateEasterBonusGross(
   referenceYear: number = new Date().getFullYear(),
   employmentStart?: Date,
   employmentEnd?: Date
-): { gross: number; daysInPeriod: number; periodDays: number } {
+): BonusCalculationResult {
   const periodStart = new Date(referenceYear, 0, 1);
   const periodEnd = new Date(referenceYear, 3, 30);
   const actualStart = employmentStart ? new Date(Math.max(employmentStart.getTime(), periodStart.getTime())) : periodStart;
-  const actualEnd = employmentEnd
-    ? new Date(Math.min(employmentEnd.getTime(), periodEnd.getTime()))
-    : periodEnd;
+  const effectiveEnd = employmentEnd ?? periodEnd;
+  const actualEnd = new Date(Math.min(effectiveEnd.getTime(), periodEnd.getTime()));
 
   const daysInPeriod = actualEnd < actualStart ? 0 : differenceInDaysInclusive(actualStart, actualEnd);
-  const periodDays = 120; // legal cap for 1/1-30/4 computations
-  const halfSalary = monthlyGross / 2;
-  const gross = roundTo2(halfSalary * clamp(daysInPeriod, 0, periodDays) / periodDays);
+  const periodDays = differenceInDaysInclusive(periodStart, periodEnd);
+  const baseGross = roundTo2(0.5 * monthlyGross * clamp(daysInPeriod, 0, periodDays) / periodDays);
+  const vacationAddonGross = roundTo2(baseGross * 0.041666);
+  const totalGross = roundTo2(baseGross + vacationAddonGross);
 
   // Example sanity check (monthly-paid, 5-day, €1,725 from 1/1–31/12 with 20 leave days):
-  // Easter gross should be close to half salary (~€862.50) for full 120 days.
+  // Easter gross should be close to half salary (~€862.50) with vacation addon near €35.94 for full period employment.
 
-  return { gross, daysInPeriod, periodDays };
+  return { baseGross, vacationAddonGross, totalGross, daysInPeriod, periodDays };
 }
 
 function calculateChristmasBonusGross(
@@ -203,46 +217,44 @@ function calculateChristmasBonusGross(
   referenceYear: number = new Date().getFullYear(),
   employmentStart?: Date,
   employmentEnd?: Date
-): { gross: number; daysInPeriod: number; periodDays: number } {
+): BonusCalculationResult {
   const periodStart = new Date(referenceYear, 4, 1);
   const periodEnd = new Date(referenceYear, 11, 31);
   const actualStart = employmentStart ? new Date(Math.max(employmentStart.getTime(), periodStart.getTime())) : periodStart;
-  const actualEnd = employmentEnd
-    ? new Date(Math.min(employmentEnd.getTime(), periodEnd.getTime()))
-    : periodEnd;
+  const effectiveEnd = employmentEnd ?? periodEnd;
+  const actualEnd = new Date(Math.min(effectiveEnd.getTime(), periodEnd.getTime()));
 
   const daysInPeriod = actualEnd < actualStart ? 0 : differenceInDaysInclusive(actualStart, actualEnd);
   const periodDays = differenceInDaysInclusive(periodStart, periodEnd);
-
-  // KEPEA proportionality: every 19 days gives 2/25 of salary, capped at 1 full salary.
-  const monthsMultiplier = clamp((daysInPeriod / 19) * (2 / 25), 0, 1);
-  const gross = roundTo2(monthlyGross * monthsMultiplier);
+  const baseGross = roundTo2(1 * monthlyGross * clamp(daysInPeriod, 0, periodDays) / periodDays);
+  const vacationAddonGross = roundTo2(baseGross * 0.041666);
+  const totalGross = roundTo2(baseGross + vacationAddonGross);
 
   // Example sanity check (monthly-paid, 5-day, €1,725 from 1/1–31/12):
-  // Full Christmas gross should be ~€1,725 when daysInPeriod equals the full window.
+  // Christmas gross should be close to one salary (~€1,725) with vacation addon near €71.88 for full period employment.
 
-  return { gross, daysInPeriod, periodDays };
+  return { baseGross, vacationAddonGross, totalGross, daysInPeriod, periodDays };
 }
 
 function calculateVacationAllowanceGross(
   monthlyGross: number,
   leaveDays: number
-): { gross: number; leaveDays: number } {
+): VacationAllowanceCalculationResult {
   const dailyWage = monthlyGross / 25;
   const vacationPay = dailyWage * leaveDays;
   const halfSalary = monthlyGross / 2;
-  const gross = roundTo2(Math.min(vacationPay, halfSalary));
+  const baseGross = roundTo2(Math.min(vacationPay, halfSalary));
 
   // Example sanity check continuation: with 20 leave days and €1,725 monthly,
   // daily wage ~€69, leading to vacation allowance capped near half salary (~€862.50).
 
-  return { gross, leaveDays };
+  return { baseGross, totalGross: baseGross, leaveDays };
 }
 
 export function calculateYearlySummary(
   salaries: { month: string; gross: number }[],
   children: number = 0,
-  options?: { referenceYear?: number; leaveDays?: number }
+  options?: { referenceYear?: number; leaveDays?: number; employmentStart?: Date; employmentEnd?: Date }
 ): YearlySummary {
   const totalRegularGross = salaries.reduce((sum, salary) => sum + salary.gross, 0);
   const monthsCount = salaries.length || 1;
@@ -250,11 +262,11 @@ export function calculateYearlySummary(
   const referenceYear = options?.referenceYear ?? new Date().getFullYear();
   const leaveDays = options?.leaveDays ?? 20;
 
-  const easter = calculateEasterBonusGross(baseMonthlyGross, referenceYear);
-  const christmas = calculateChristmasBonusGross(baseMonthlyGross, referenceYear);
+  const easter = calculateEasterBonusGross(baseMonthlyGross, referenceYear, options?.employmentStart, options?.employmentEnd);
+  const christmas = calculateChristmasBonusGross(baseMonthlyGross, referenceYear, options?.employmentStart, options?.employmentEnd);
   const vacation = calculateVacationAllowanceGross(baseMonthlyGross, leaveDays);
 
-  const bonusGrossTotal = easter.gross + christmas.gross + vacation.gross;
+  const bonusGrossTotal = easter.totalGross + christmas.totalGross + vacation.totalGross;
   const totalGross = totalRegularGross + bonusGrossTotal;
 
   const totalEfkaEmployee = totalGross * EFKA_EMPLOYEE_RATE;
@@ -289,9 +301,9 @@ export function calculateYearlySummary(
     net: buildLine(gross).net,
   }));
 
-  const easterLine = buildLine(easter.gross);
-  const christmasLine = buildLine(christmas.gross);
-  const vacationLine = buildLine(vacation.gross);
+  const easterLine = buildLine(easter.totalGross);
+  const christmasLine = buildLine(christmas.totalGross);
+  const vacationLine = buildLine(vacation.totalGross);
 
   const bonusBreakdown: BonusBreakdown = {
     easter: easterLine,
@@ -302,14 +314,7 @@ export function calculateYearlySummary(
   };
 
   const simpleAnnualGross14 = baseMonthlyGross * 14;
-  const easterBase = baseMonthlyGross / 2;
-  const christmasBase = baseMonthlyGross;
-  const vacationBase = baseMonthlyGross / 2;
-  const easterIncrement = Math.max(0, easter.gross - easterBase);
-  const christmasIncrement = Math.max(0, christmas.gross - christmasBase);
-  const vacationIncrement = Math.max(0, vacation.gross - vacationBase);
-  const totalGrossWithIncrements =
-    simpleAnnualGross14 + easterIncrement + christmasIncrement + vacationIncrement;
+  const totalGrossWithIncrements = totalGross;
 
   return {
     totalGross,
