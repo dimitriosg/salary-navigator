@@ -5,12 +5,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { CalendarDays, PiggyBank, Receipt, FileText, Trash2, Plus, Users, Pencil, Check, X, TrendingUp, TrendingDown } from 'lucide-react';
 import { calculateYearlySummary, formatCurrency, GREEK_MONTHS, type YearlySummary as YearlySummaryType } from '@/lib/salaryCalculations';
+import { parseNumericExpression } from '@/lib/numberUtils';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 const ENGLISH_MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December',
-  'Christmas Bonus', 'Easter Bonus', 'Vacation Allowance'
+  'July', 'August', 'September', 'October', 'November', 'December'
 ];
 
 interface MonthlySalary {
@@ -77,9 +77,18 @@ export function YearlySummary() {
     }
   };
 
+  const commitGrossAmount = () => {
+    const parsed = parseNumericExpression(grossAmount);
+    if (parsed !== null && parsed > 0) {
+      setGrossAmount(parsed.toFixed(2));
+      return parsed;
+    }
+    return null;
+  };
+
   const addSalary = () => {
-    const gross = parseFloat(grossAmount);
-    if (!isNaN(gross) && gross > 0) {
+    const gross = commitGrossAmount();
+    if (gross !== null) {
       const newSalaries = [...salaries, { month: selectedMonth, gross }];
       setSalaries(newSalaries);
       setGrossAmount('');
@@ -94,9 +103,9 @@ export function YearlySummary() {
   };
 
   const fillWithSameSalary = () => {
-    const gross = parseFloat(grossAmount);
-    if (!isNaN(gross) && gross > 0) {
-      const allSalaries = months.map((month, i) => ({ month, gross }));
+    const gross = commitGrossAmount();
+    if (gross !== null) {
+      const allSalaries = months.map((month) => ({ month, gross }));
       setSalaries(allSalaries);
       recalculateSummary(allSalaries);
     }
@@ -113,15 +122,15 @@ export function YearlySummary() {
   };
 
   const saveEdit = (index: number) => {
-    const gross = parseFloat(editValue);
-    if (!isNaN(gross) && gross > 0) {
+    const gross = parseNumericExpression(editValue);
+    if (gross !== null && gross > 0) {
       const newSalaries = [...salaries];
       newSalaries[index] = { ...newSalaries[index], gross };
       setSalaries(newSalaries);
       recalculateSummary(newSalaries);
+      setEditValue(gross.toFixed(2));
     }
     setEditingIndex(null);
-    setEditValue('');
   };
 
   const handleChildrenChange = (newChildren: number) => {
@@ -168,11 +177,17 @@ export function YearlySummary() {
               <Label htmlFor="grossSalary">{t('yearly.grossSalary')}</Label>
               <Input
                 id="grossSalary"
-                type="number"
+                type="text"
                 placeholder={language === 'el' ? 'π.χ. 1500' : 'e.g. 1500'}
                 value={grossAmount}
                 onChange={(e) => setGrossAmount(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && addSalary()}
+                onBlur={commitGrossAmount}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    e.preventDefault();
+                    addSalary();
+                  }
+                }}
               />
             </div>
             <div className="space-y-2">
@@ -207,78 +222,110 @@ export function YearlySummary() {
 
         {/* Salaries List */}
         {salaries.length > 0 && (
-          <div className="space-y-2 animate-fade-in">
-            <h4 className="font-semibold text-foreground flex items-center gap-2">
-              <Receipt className="w-4 h-4" />
-              {t('yearly.registered')} ({salaries.length})
-              <span className="text-xs text-muted-foreground font-normal ml-2">
-                {t('yearly.editHint')}
-              </span>
-            </h4>
-            <div className="max-h-64 overflow-y-auto space-y-1 pr-2">
-              {salaries.map((salary, index) => (
-                <div
-                  key={index}
-                  className="flex justify-between items-center py-2 px-3 bg-muted/50 rounded-lg group hover:bg-muted transition-colors"
-                >
-                  <span className="text-sm text-foreground">{salary.month}</span>
-                  <div className="flex items-center gap-2">
-                    {editingIndex === index ? (
-                      <>
-                        <Input
-                          type="number"
-                          value={editValue}
-                          onChange={(e) => setEditValue(e.target.value)}
-                          onKeyDown={(e) => {
-                            if (e.key === 'Enter') saveEdit(index);
-                            if (e.key === 'Escape') cancelEditing();
-                          }}
-                          className="w-24 h-8 text-sm"
-                          autoFocus
-                        />
-                        <button
-                          onClick={() => saveEdit(index)}
-                          className="text-secondary hover:text-secondary/80 p-1"
-                        >
-                          <Check className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={cancelEditing}
-                          className="text-destructive hover:text-destructive/80 p-1"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <span className="font-medium text-foreground">{formatCurrency(salary.gross)}</span>
-                        <button
-                          onClick={() => startEditing(index)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground p-1"
-                        >
-                          <Pencil className="w-4 h-4" />
-                        </button>
-                        <button
-                          onClick={() => removeSalary(index)}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive/80 p-1"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      </>
-                    )}
+          <div className="space-y-4 animate-fade-in">
+            <div className="space-y-2">
+              <h4 className="font-semibold text-foreground flex items-center gap-2">
+                <Receipt className="w-4 h-4" />
+                {t('yearly.registered')} ({salaries.length})
+                <span className="text-xs text-muted-foreground font-normal ml-2">
+                  {t('yearly.editHint')}
+                </span>
+              </h4>
+              <div className="max-h-64 overflow-y-auto space-y-1 pr-2">
+                {salaries.map((salary, index) => (
+                  <div
+                    key={index}
+                    className="flex justify-between items-center py-2 px-3 bg-muted/50 rounded-lg group hover:bg-muted transition-colors"
+                  >
+                    <span className="text-sm text-foreground">{salary.month}</span>
+                    <div className="flex items-center gap-2">
+                      {editingIndex === index ? (
+                        <>
+                          <Input
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onBlur={() => saveEdit(index)}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') saveEdit(index);
+                              if (e.key === 'Escape') cancelEditing();
+                            }}
+                            className="w-24 h-8 text-sm"
+                            autoFocus
+                          />
+                          <button
+                            onClick={() => saveEdit(index)}
+                            className="text-secondary hover:text-secondary/80 p-1"
+                          >
+                            <Check className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={cancelEditing}
+                            className="text-destructive hover:text-destructive/80 p-1"
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </>
+                      ) : (
+                        <>
+                          <span className="font-medium text-foreground">{formatCurrency(salary.gross)}</span>
+                          <button
+                            onClick={() => startEditing(index)}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground hover:text-foreground p-1"
+                          >
+                            <Pencil className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => removeSalary(index)}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity text-destructive hover:text-destructive/80 p-1"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {summary && (
+              <div className="space-y-2">
+                <h4 className="font-semibold text-foreground flex items-center gap-2">
+                  <Gift className="w-4 h-4" />
+                  {t('yearly.bonusSectionTitle')}
+                </h4>
+                <div className="space-y-1">
+                  <div className="flex justify-between items-center py-2 px-3 bg-muted/50 rounded-lg">
+                    <span className="text-sm text-foreground">{t('yearly.easterBonus')}</span>
+                    <span className="font-medium text-foreground">{formatCurrency(summary.bonusBreakdown.easter)}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 px-3 bg-muted/50 rounded-lg">
+                    <span className="text-sm text-foreground">{t('yearly.christmasBonus')}</span>
+                    <span className="font-medium text-foreground">{formatCurrency(summary.bonusBreakdown.christmas)}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 px-3 bg-muted/50 rounded-lg">
+                    <span className="text-sm text-foreground">{t('yearly.vacationAllowance')}</span>
+                    <span className="font-medium text-foreground">{formatCurrency(summary.bonusBreakdown.vacation)}</span>
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            )}
           </div>
         )}
 
         {/* Summary */}
         {summary && (
           <div className="space-y-4 animate-slide-up">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div className="p-4 rounded-xl bg-muted">
-                <p className="text-sm text-muted-foreground mb-1">{t('yearly.yearlyGross')}</p>
+                <p className="text-sm text-muted-foreground mb-1">{t('yearly.simpleGross14')}</p>
+                <p className="text-2xl font-display font-bold text-foreground">
+                  {formatCurrency(summary.simpleAnnualGross14)}
+                </p>
+              </div>
+              <div className="p-4 rounded-xl bg-muted/70">
+                <p className="text-sm text-muted-foreground mb-1">{t('yearly.grossWithIncrements')}</p>
                 <p className="text-2xl font-display font-bold text-foreground">
                   {formatCurrency(summary.totalGross)}
                 </p>

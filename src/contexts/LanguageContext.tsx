@@ -148,7 +148,8 @@ const translations: Record<Language, Record<string, string>> = {
     'yearly.sameYear': 'Ίδιος μισθός όλη τη χρονιά',
     'yearly.registered': 'Καταχωρημένοι Μισθοί',
     'yearly.editHint': '(κλικ στο μολύβι για επεξεργασία)',
-    'yearly.yearlyGross': 'Ετήσια Μικτά',
+    'yearly.simpleGross14': 'Ετήσια Μικτά (μισθός ×14)',
+    'yearly.grossWithIncrements': 'Συνολικά Μικτά με προσαυξήσεις',
     'yearly.yearlyNet': 'Ετήσια Καθαρά',
     'yearly.taxDeclaration': 'Στοιχεία για Φορολογική Δήλωση',
     'yearly.efkaEmployee': 'ΕΦΚΑ Εργαζομένου',
@@ -171,6 +172,10 @@ const translations: Record<Language, Record<string, string>> = {
       'η οποία πιθανότατα θα εμφανιστεί ως επιστροφή φόρου στην επόμενη φορολογική σας δήλωση.',
     'yearly.refundDisclaimer':
       '* Οι παραπάνω υπολογισμοί είναι ενδεικτικοί και δεν αποτελούν φορολογική ή λογιστική συμβουλή. Επιβεβαιώστε τα τελικά ποσά με τον λογιστή σας.',
+    'yearly.bonusSectionTitle': 'Δώρα & Επίδομα Άδειας',
+    'yearly.easterBonus': 'Δώρο Πάσχα',
+    'yearly.christmasBonus': 'Δώρο Χριστουγέννων',
+    'yearly.vacationAllowance': 'Επίδομα άδειας',
 
     // Common
     'common.yes': 'Ναι',
@@ -316,7 +321,8 @@ const translations: Record<Language, Record<string, string>> = {
     'yearly.sameYear': 'Same salary for the whole year',
     'yearly.registered': 'Registered Salaries',
     'yearly.editHint': '(click pencil to edit)',
-    'yearly.yearlyGross': 'Yearly Gross',
+    'yearly.simpleGross14': 'Annual gross (salary ×14)',
+    'yearly.grossWithIncrements': 'Total gross with increments',
     'yearly.yearlyNet': 'Yearly Net',
     'yearly.taxDeclaration': 'Tax Declaration Details',
     'yearly.efkaEmployee': 'EFKA Employee',
@@ -339,6 +345,10 @@ const translations: Record<Language, Record<string, string>> = {
       'which is likely to appear as a tax refund in your next tax return.',
     'yearly.refundDisclaimer':
       '* The above calculations are indicative and do not constitute tax or accounting advice. Please confirm the final amounts with your accountant.',
+    'yearly.bonusSectionTitle': 'Bonuses & Vacation Allowance',
+    'yearly.easterBonus': 'Easter bonus',
+    'yearly.christmasBonus': 'Christmas bonus',
+    'yearly.vacationAllowance': 'Vacation allowance',
 
     // Common
     'common.yes': 'Yes',

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Calculator, ArrowRightLeft, TrendingUp, TrendingDown, Users } from 'lucide-react';
 import { calculateGrossToNet, calculateNetToGross, formatCurrency, type SalaryBreakdown } from '@/lib/salaryCalculations';
+import { parseNumericExpression } from '@/lib/numberUtils';
 import { useLanguage } from '@/contexts/LanguageContext';
 
 export function SalaryCalculator() {
@@ -30,33 +31,51 @@ export function SalaryCalculator() {
   const handleGrossChange = (value: string) => {
     setActiveSide('gross');
     setGrossInput(value);
-    const gross = parseFloat(value);
-    if (!isNaN(gross) && gross > 0) {
-      recalcFromGross(gross);
-    }
   };
 
   const handleNetChange = (value: string) => {
     setActiveSide('net');
     setNetInput(value);
-    const net = parseFloat(value);
-    if (!isNaN(net) && net > 0) {
-      recalcFromNet(net);
-    }
   };
 
   const handleGrossToNet = () => {
-    const gross = parseFloat(grossInput);
-    if (!isNaN(gross) && gross > 0) {
+    const gross = parseNumericExpression(grossInput);
+    if (gross !== null && gross > 0) {
       setActiveSide('gross');
+      const formatted = gross.toFixed(2);
+      setGrossInput(formatted);
       recalcFromGross(gross);
+    } else if (breakdown) {
+      setGrossInput(breakdown.grossSalary.toFixed(2));
     }
   };
 
   const handleNetToGross = () => {
-    const net = parseFloat(netInput);
-    if (!isNaN(net) && net > 0) {
+    const net = parseNumericExpression(netInput);
+    if (net !== null && net > 0) {
       setActiveSide('net');
+      const formatted = net.toFixed(2);
+      setNetInput(formatted);
+      recalcFromNet(net);
+    } else if (breakdown) {
+      setNetInput(breakdown.netSalary.toFixed(2));
+    }
+  };
+
+  const commitGrossInput = () => {
+    const gross = parseNumericExpression(grossInput);
+    if (gross !== null && gross > 0) {
+      const formatted = gross.toFixed(2);
+      setGrossInput(formatted);
+      recalcFromGross(gross);
+    }
+  };
+
+  const commitNetInput = () => {
+    const net = parseNumericExpression(netInput);
+    if (net !== null && net > 0) {
+      const formatted = net.toFixed(2);
+      setNetInput(formatted);
       recalcFromNet(net);
     }
   };
@@ -179,11 +198,17 @@ export function SalaryCalculator() {
                 <Label htmlFor="gross">{t('calc.grossSalary')}</Label>
                 <Input
                   id="gross"
-                  type="number"
+                  type="text"
                   placeholder={language === 'el' ? 'π.χ. 1500' : 'e.g. 1500'}
                   value={grossInput}
                   onChange={(e) => handleGrossChange(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleGrossToNet()}
+                  onBlur={commitGrossInput}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleGrossToNet();
+                    }
+                  }}
                   className="text-lg h-12"
                 />
               </div>
@@ -205,11 +230,17 @@ export function SalaryCalculator() {
                 <Label htmlFor="net">{t('calc.netSalary')}</Label>
                 <Input
                   id="net"
-                  type="number"
+                  type="text"
                   placeholder={language === 'el' ? 'π.χ. 1200' : 'e.g. 1200'}
                   value={netInput}
                   onChange={(e) => handleNetChange(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleNetToGross()}
+                  onBlur={commitNetInput}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      e.preventDefault();
+                      handleNetToGross();
+                    }
+                  }}
                   className="text-lg h-12"
                 />
               </div>

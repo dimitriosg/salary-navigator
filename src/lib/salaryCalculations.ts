@@ -132,6 +132,13 @@ export function calculateNetToGross(monthlyNet: number, months: number = 14, chi
   return result || calculateGrossToNet(high, months, children);
 }
 
+export interface BonusBreakdown {
+  easter: number;
+  christmas: number;
+  vacation: number;
+  total: number;
+}
+
 export interface YearlySummary {
   totalGross: number;
   totalNet: number;
@@ -141,52 +148,45 @@ export interface YearlySummary {
   totalSolidarityTax: number;
   totalDeductions: number;
   monthlySalaries: { month: string; gross: number; net: number }[];
+  bonusBreakdown: BonusBreakdown;
+  simpleAnnualGross14: number;
+  baseMonthlyGross: number;
 }
 
-type PaymentType = 'regular' | 'easter' | 'christmas' | 'vacation';
-
-function getPaymentType(monthLabel: string): PaymentType {
-  const label = monthLabel.toLowerCase();
-
-  if (label.includes('πάσχα') || label.includes('easter')) return 'easter';
-  if (label.includes('χριστουγέν') || label.includes('christmas')) return 'christmas';
-  if (label.includes('άδει') || label.includes('vacation')) return 'vacation';
-  return 'regular';
+function calculateEasterBonusGross(monthlyGross: number): number {
+  const base = monthlyGross * 0.5;
+  return base + base / 24;
 }
 
-function getPaymentGross(baseGross: number, type: PaymentType): number {
-  switch (type) {
-    case 'easter': {
-      const base = baseGross * 0.5;
-      return base + base / 24; // include vacation allowance increment
-    }
-    case 'christmas': {
-      const base = baseGross; // full monthly salary
-      return base + base / 24; // include vacation allowance increment
-    }
-    case 'vacation':
-      return baseGross * 0.5; // allowance capped at half salary
-    default:
-      return baseGross; // regular monthly salary
-  }
+function calculateChristmasBonusGross(monthlyGross: number): number {
+  const base = monthlyGross;
+  return base + base / 24;
+}
+
+function calculateVacationAllowanceGross(monthlyGross: number): number {
+  return monthlyGross * 0.5;
 }
 
 export function calculateYearlySummary(
   salaries: { month: string; gross: number }[],
   children: number = 0
 ): YearlySummary {
-  const payments = salaries.map((salary) => {
-    const type = getPaymentType(salary.month);
-    const paymentGross = getPaymentGross(salary.gross, type);
+  const totalRegularGross = salaries.reduce((sum, salary) => sum + salary.gross, 0);
+  const monthsCount = salaries.length || 1;
+  const baseMonthlyGross = totalRegularGross / monthsCount;
 
-    return {
-      ...salary,
-      type,
-      paymentGross,
-    };
-  });
+  const easterBonus = calculateEasterBonusGross(baseMonthlyGross);
+  const christmasBonus = calculateChristmasBonusGross(baseMonthlyGross);
+  const vacationAllowance = calculateVacationAllowanceGross(baseMonthlyGross);
 
-  const totalGross = payments.reduce((sum, payment) => sum + payment.paymentGross, 0);
+  const bonusBreakdown: BonusBreakdown = {
+    easter: easterBonus,
+    christmas: christmasBonus,
+    vacation: vacationAllowance,
+    total: easterBonus + christmasBonus + vacationAllowance,
+  };
+
+  const totalGross = totalRegularGross + bonusBreakdown.total;
   const totalEfkaEmployee = totalGross * EFKA_EMPLOYEE_RATE;
   const totalEfkaEmployer = totalGross * EFKA_EMPLOYER_RATE;
   const totalIncomeTax = calculateIncomeTax(totalGross - totalEfkaEmployee, children);
@@ -194,16 +194,16 @@ export function calculateYearlySummary(
   const totalDeductions = totalEfkaEmployee + totalIncomeTax + totalSolidarityTax;
   const totalNet = totalGross - totalDeductions;
 
-  const monthlySalaries = payments.map(({ month, paymentGross }) => {
-    if (totalGross === 0) {
+  const monthlySalaries = salaries.map(({ month, gross }) => {
+    if (totalRegularGross === 0) {
       return { month, gross: 0, net: 0 };
     }
 
-    const proportion = paymentGross / totalGross;
+    const proportion = gross / totalRegularGross;
     return {
       month,
-      gross: paymentGross,
-      net: totalNet * proportion,
+      gross,
+      net: totalNet * (gross / totalGross),
     };
   });
 
@@ -216,6 +216,9 @@ export function calculateYearlySummary(
     totalSolidarityTax,
     totalDeductions,
     monthlySalaries,
+    bonusBreakdown,
+    simpleAnnualGross14: baseMonthlyGross * 14,
+    baseMonthlyGross,
   };
 }
 
@@ -232,9 +235,6 @@ export const GREEK_MONTHS = [
   'Οκτώβριος',
   'Νοέμβριος',
   'Δεκέμβριος',
-  'Δώρο Πάσχα',
-  'Δώρο Χριστουγέννων',
-  'Επίδομα άδειας',
 ];
 
 export function formatCurrency(amount: number): string {
