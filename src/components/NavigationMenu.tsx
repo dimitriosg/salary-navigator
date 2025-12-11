@@ -37,7 +37,7 @@ export function NavigationMenu() {
                 }`}
               >
                 {beta && (
-                  <span className="absolute -left-6 -top-2 -rotate-45 bg-primary text-primary-foreground px-5 py-1 text-[10px] font-semibold shadow-lg">
+                  <span className="absolute right-2 top-2 rotate-12 bg-red-600 text-white px-4 py-1 text-[10px] font-semibold shadow-lg z-10">
                     BETA
                   </span>
                 )}
