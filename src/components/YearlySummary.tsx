@@ -296,18 +296,36 @@ export function YearlySummary() {
                   {t('yearly.bonusSectionTitle')}
                 </h4>
                 <div className="space-y-1">
-                  <div className="flex justify-between items-center py-2 px-3 bg-muted/50 rounded-lg">
-                    <span className="text-sm text-foreground">{t('yearly.easterBonus')}</span>
-                    <span className="font-medium text-foreground">{formatCurrency(summary.bonusBreakdown.easter)}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-muted/50 rounded-lg">
-                    <span className="text-sm text-foreground">{t('yearly.christmasBonus')}</span>
-                    <span className="font-medium text-foreground">{formatCurrency(summary.bonusBreakdown.christmas)}</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 px-3 bg-muted/50 rounded-lg">
-                    <span className="text-sm text-foreground">{t('yearly.vacationAllowance')}</span>
-                    <span className="font-medium text-foreground">{formatCurrency(summary.bonusBreakdown.vacation)}</span>
-                  </div>
+                  {[
+                    {
+                      label: t('yearly.easterBonus'),
+                      gross: summary.bonusBreakdown.easter.gross,
+                      net: summary.bonusBreakdown.easter.net,
+                    },
+                    {
+                      label: t('yearly.christmasBonus'),
+                      gross: summary.bonusBreakdown.christmas.gross,
+                      net: summary.bonusBreakdown.christmas.net,
+                    },
+                    {
+                      label: t('yearly.vacationAllowance'),
+                      gross: summary.bonusBreakdown.vacation.gross,
+                      net: summary.bonusBreakdown.vacation.net,
+                    },
+                  ].map((item) => (
+                    <div
+                      key={item.label}
+                      className="flex justify-between items-center py-2 px-3 bg-muted/50 rounded-lg"
+                    >
+                      <span className="text-sm text-foreground">{item.label}</span>
+                      <div className="text-right">
+                        <div className="font-medium text-foreground">{formatCurrency(item.gross)}</div>
+                        <div className="text-xs text-muted-foreground">
+                          {t('yearly.netAmount', { amount: formatCurrency(item.net) })}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             )}

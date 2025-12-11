@@ -132,11 +132,21 @@ export function calculateNetToGross(monthlyNet: number, months: number = 14, chi
   return result || calculateGrossToNet(high, months, children);
 }
 
+export interface BonusLineBreakdown {
+  gross: number;
+  net: number;
+  efkaEmployee: number;
+  efkaEmployer: number;
+  incomeTax: number;
+  totalDeductions: number;
+}
+
 export interface BonusBreakdown {
-  easter: number;
-  christmas: number;
-  vacation: number;
-  total: number;
+  easter: BonusLineBreakdown;
+  christmas: BonusLineBreakdown;
+  vacation: BonusLineBreakdown;
+  totalGross: number;
+  totalNet: number;
 }
 
 export interface YearlySummary {
@@ -153,59 +163,142 @@ export interface YearlySummary {
   baseMonthlyGross: number;
 }
 
-function calculateEasterBonusGross(monthlyGross: number): number {
-  const base = monthlyGross * 0.5;
-  return base + base / 24;
+const roundTo2 = (value: number) => Math.round(value * 100) / 100;
+
+const clamp = (value: number, min: number, max: number) => Math.min(Math.max(value, min), max);
+
+function differenceInDaysInclusive(start: Date, end: Date): number {
+  const startTime = new Date(start.getFullYear(), start.getMonth(), start.getDate()).getTime();
+  const endTime = new Date(end.getFullYear(), end.getMonth(), end.getDate()).getTime();
+  return Math.floor((endTime - startTime) / (1000 * 60 * 60 * 24)) + 1;
 }
 
-function calculateChristmasBonusGross(monthlyGross: number): number {
-  const base = monthlyGross;
-  return base + base / 24;
+function calculateEasterBonusGross(
+  monthlyGross: number,
+  referenceYear: number = new Date().getFullYear(),
+  employmentStart?: Date,
+  employmentEnd?: Date
+): { gross: number; daysInPeriod: number; periodDays: number } {
+  const periodStart = new Date(referenceYear, 0, 1);
+  const periodEnd = new Date(referenceYear, 3, 30);
+  const actualStart = employmentStart ? new Date(Math.max(employmentStart.getTime(), periodStart.getTime())) : periodStart;
+  const actualEnd = employmentEnd
+    ? new Date(Math.min(employmentEnd.getTime(), periodEnd.getTime()))
+    : periodEnd;
+
+  const daysInPeriod = actualEnd < actualStart ? 0 : differenceInDaysInclusive(actualStart, actualEnd);
+  const periodDays = 120; // legal cap for 1/1-30/4 computations
+  const halfSalary = monthlyGross / 2;
+  const gross = roundTo2(halfSalary * clamp(daysInPeriod, 0, periodDays) / periodDays);
+
+  // Example sanity check (monthly-paid, 5-day, €1,725 from 1/1–31/12 with 20 leave days):
+  // Easter gross should be close to half salary (~€862.50) for full 120 days.
+
+  return { gross, daysInPeriod, periodDays };
 }
 
-function calculateVacationAllowanceGross(monthlyGross: number): number {
-  return monthlyGross * 0.5;
+function calculateChristmasBonusGross(
+  monthlyGross: number,
+  referenceYear: number = new Date().getFullYear(),
+  employmentStart?: Date,
+  employmentEnd?: Date
+): { gross: number; daysInPeriod: number; periodDays: number } {
+  const periodStart = new Date(referenceYear, 4, 1);
+  const periodEnd = new Date(referenceYear, 11, 31);
+  const actualStart = employmentStart ? new Date(Math.max(employmentStart.getTime(), periodStart.getTime())) : periodStart;
+  const actualEnd = employmentEnd
+    ? new Date(Math.min(employmentEnd.getTime(), periodEnd.getTime()))
+    : periodEnd;
+
+  const daysInPeriod = actualEnd < actualStart ? 0 : differenceInDaysInclusive(actualStart, actualEnd);
+  const periodDays = differenceInDaysInclusive(periodStart, periodEnd);
+
+  // KEPEA proportionality: every 19 days gives 2/25 of salary, capped at 1 full salary.
+  const monthsMultiplier = clamp((daysInPeriod / 19) * (2 / 25), 0, 1);
+  const gross = roundTo2(monthlyGross * monthsMultiplier);
+
+  // Example sanity check (monthly-paid, 5-day, €1,725 from 1/1–31/12):
+  // Full Christmas gross should be ~€1,725 when daysInPeriod equals the full window.
+
+  return { gross, daysInPeriod, periodDays };
+}
+
+function calculateVacationAllowanceGross(
+  monthlyGross: number,
+  leaveDays: number
+): { gross: number; leaveDays: number } {
+  const dailyWage = monthlyGross / 25;
+  const vacationPay = dailyWage * leaveDays;
+  const halfSalary = monthlyGross / 2;
+  const gross = roundTo2(Math.min(vacationPay, halfSalary));
+
+  // Example sanity check continuation: with 20 leave days and €1,725 monthly,
+  // daily wage ~€69, leading to vacation allowance capped near half salary (~€862.50).
+
+  return { gross, leaveDays };
 }
 
 export function calculateYearlySummary(
   salaries: { month: string; gross: number }[],
-  children: number = 0
+  children: number = 0,
+  options?: { referenceYear?: number; leaveDays?: number }
 ): YearlySummary {
   const totalRegularGross = salaries.reduce((sum, salary) => sum + salary.gross, 0);
   const monthsCount = salaries.length || 1;
   const baseMonthlyGross = totalRegularGross / monthsCount;
+  const referenceYear = options?.referenceYear ?? new Date().getFullYear();
+  const leaveDays = options?.leaveDays ?? 20;
 
-  const easterBonus = calculateEasterBonusGross(baseMonthlyGross);
-  const christmasBonus = calculateChristmasBonusGross(baseMonthlyGross);
-  const vacationAllowance = calculateVacationAllowanceGross(baseMonthlyGross);
+  const easter = calculateEasterBonusGross(baseMonthlyGross, referenceYear);
+  const christmas = calculateChristmasBonusGross(baseMonthlyGross, referenceYear);
+  const vacation = calculateVacationAllowanceGross(baseMonthlyGross, leaveDays);
 
-  const bonusBreakdown: BonusBreakdown = {
-    easter: easterBonus,
-    christmas: christmasBonus,
-    vacation: vacationAllowance,
-    total: easterBonus + christmasBonus + vacationAllowance,
-  };
+  const bonusGrossTotal = easter.gross + christmas.gross + vacation.gross;
+  const totalGross = totalRegularGross + bonusGrossTotal;
 
-  const totalGross = totalRegularGross + bonusBreakdown.total;
   const totalEfkaEmployee = totalGross * EFKA_EMPLOYEE_RATE;
   const totalEfkaEmployer = totalGross * EFKA_EMPLOYER_RATE;
-  const totalIncomeTax = calculateIncomeTax(totalGross - totalEfkaEmployee, children);
-  const totalSolidarityTax = SOLIDARITY_SUSPENDED ? 0 : calculateIncomeTax(totalGross - totalEfkaEmployee, children);
+  const taxableIncome = totalGross - totalEfkaEmployee;
+  const totalIncomeTax = calculateIncomeTax(taxableIncome, children);
+  const totalSolidarityTax = SOLIDARITY_SUSPENDED ? 0 : calculateIncomeTax(taxableIncome, children);
   const totalDeductions = totalEfkaEmployee + totalIncomeTax + totalSolidarityTax;
   const totalNet = totalGross - totalDeductions;
 
-  const monthlySalaries = salaries.map(({ month, gross }) => {
-    if (totalRegularGross === 0) {
-      return { month, gross: 0, net: 0 };
-    }
+  const buildLine = (gross: number): BonusLineBreakdown => {
+    const efkaEmployee = gross * EFKA_EMPLOYEE_RATE;
+    const efkaEmployer = gross * EFKA_EMPLOYER_RATE;
+    const taxablePortion = taxableIncome > 0 ? (gross - efkaEmployee) / taxableIncome : 0;
+    const incomeTaxShare = totalIncomeTax * taxablePortion;
+    const net = gross - efkaEmployee - incomeTaxShare - (totalSolidarityTax * taxablePortion || 0);
+    const totalLineDeductions = efkaEmployee + incomeTaxShare + (totalSolidarityTax * taxablePortion || 0);
 
-    const proportion = gross / totalRegularGross;
     return {
-      month,
       gross,
-      net: totalNet * (gross / totalGross),
+      net,
+      efkaEmployee,
+      efkaEmployer,
+      incomeTax: incomeTaxShare,
+      totalDeductions: totalLineDeductions,
     };
-  });
+  };
+
+  const monthlySalaries = salaries.map(({ month, gross }) => ({
+    month,
+    gross,
+    net: buildLine(gross).net,
+  }));
+
+  const easterLine = buildLine(easter.gross);
+  const christmasLine = buildLine(christmas.gross);
+  const vacationLine = buildLine(vacation.gross);
+
+  const bonusBreakdown: BonusBreakdown = {
+    easter: easterLine,
+    christmas: christmasLine,
+    vacation: vacationLine,
+    totalGross: bonusGrossTotal,
+    totalNet: easterLine.net + christmasLine.net + vacationLine.net,
+  };
 
   return {
     totalGross,
