@@ -144,39 +144,39 @@ export interface YearlySummary {
 }
 
 export function calculateYearlySummary(salaries: { month: string; gross: number }[], children: number = 0): YearlySummary {
-  const totalGross = salaries.reduce((sum, s) => sum + s.gross, 0);
-  
-  // Calculate annual tax based on total income
-  const annualEfkaEmployee = totalGross * EFKA_EMPLOYEE_RATE;
-  const annualEfkaEmployer = totalGross * EFKA_EMPLOYER_RATE;
-  const taxableIncome = totalGross - annualEfkaEmployee;
-  const annualIncomeTax = calculateIncomeTax(taxableIncome, children);
-  const annualSolidarityTax = 0; // Suspended
-  const totalDeductions = annualEfkaEmployee + annualIncomeTax + annualSolidarityTax;
-  const totalNet = totalGross - totalDeductions;
+  const totals = salaries.reduce(
+    (acc, salary) => {
+      const breakdown = calculateGrossToNet(salary.gross, 1, children);
 
-  // Calculate monthly net for each salary entry
-  // Note: This is approximate as tax is calculated annually
-  const monthlySalaries = salaries.map(s => {
-    const monthlyEfka = s.gross * EFKA_EMPLOYEE_RATE;
-    const monthlyTax = (annualIncomeTax / totalGross) * s.gross;
-    return {
-      month: s.month,
-      gross: s.gross,
-      net: s.gross - monthlyEfka - monthlyTax,
-    };
-  });
+      acc.totalGross += salary.gross;
+      acc.totalEfkaEmployee += breakdown.efkaEmployee;
+      acc.totalEfkaEmployer += breakdown.efkaEmployer;
+      acc.totalIncomeTax += breakdown.incomeTax;
+      acc.totalSolidarityTax += breakdown.solidarityTax;
+      acc.totalDeductions += breakdown.totalDeductions;
+      acc.totalNet += breakdown.netSalary;
 
-  return {
-    totalGross,
-    totalNet,
-    totalEfkaEmployee: annualEfkaEmployee,
-    totalEfkaEmployer: annualEfkaEmployer,
-    totalIncomeTax: annualIncomeTax,
-    totalSolidarityTax: annualSolidarityTax,
-    totalDeductions,
-    monthlySalaries,
-  };
+      acc.monthlySalaries.push({
+        month: salary.month,
+        gross: salary.gross,
+        net: breakdown.netSalary,
+      });
+
+      return acc;
+    },
+    {
+      totalGross: 0,
+      totalNet: 0,
+      totalEfkaEmployee: 0,
+      totalEfkaEmployer: 0,
+      totalIncomeTax: 0,
+      totalSolidarityTax: 0,
+      totalDeductions: 0,
+      monthlySalaries: [] as { month: string; gross: number; net: number }[],
+    }
+  );
+
+  return totals;
 }
 
 export const GREEK_MONTHS = [
@@ -194,6 +194,7 @@ export const GREEK_MONTHS = [
   'Δεκέμβριος',
   'Δώρο Πάσχα',
   'Δώρο Χριστουγέννων',
+  'Επίδομα άδειας',
 ];
 
 export function formatCurrency(amount: number): string {

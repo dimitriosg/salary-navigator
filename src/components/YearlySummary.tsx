@@ -10,7 +10,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 const ENGLISH_MONTHS = [
   'January', 'February', 'March', 'April', 'May', 'June',
   'July', 'August', 'September', 'October', 'November', 'December',
-  'Christmas Bonus', 'Easter Bonus'
+  'Christmas Bonus', 'Easter Bonus', 'Vacation Allowance'
 ];
 
 interface MonthlySalary {

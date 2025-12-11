@@ -12,16 +12,36 @@ const translations: Record<Language, Record<string, string>> = {
   el: {
     'app.title': 'Υπολογιστής Μισθού',
     'app.subtitle': 'Υπολογίστε τον καθαρό μισθό σας, τις εισφορές σας και προετοιμάστε τη φορολογική σας δήλωση',
-    'tabs.calculator': 'Υπολογιστής',
-    'tabs.calculator.short': 'Υπολ.',
+    'tabs.calculator': 'Μισθοδοσία',
+    'tabs.calculator.short': 'Μισθοδοσία',
     'tabs.employer': 'Εργοδότης',
     'tabs.employer.short': 'Εργοδ.',
     'tabs.yearly': 'Ετήσια',
     'footer.disclaimer': 'Οι υπολογισμοί βασίζονται στα φορολογικά δεδομένα του 2025. Για επίσημη χρήση συμβουλευτείτε λογιστή.',
-    
+
+    // Navigation
+    'nav.title': 'Μενού εργαλείων',
+    'nav.subtitle': 'Γρήγορη πρόσβαση σε όλους τους υπολογισμούς',
+    'nav.payroll': 'Μισθοδοσία',
+    'nav.payrollDesc': 'Μικτά και καθαρά δίπλα-δίπλα',
+    'nav.yearly': 'Ετήσια σύνοψη',
+    'nav.yearlyDesc': 'Προβλέψτε τη φορολογική δήλωση',
+    'nav.employer': 'Κόστος εργοδότη',
+    'nav.employerDesc': 'Συνολικό κόστος και εισφορές',
+    'nav.easter': 'Δώρο Πάσχα',
+    'nav.easterDesc': 'Υπολογισμός εποχικού δώρου',
+    'nav.christmas': 'Δώρο Χριστουγέννων',
+    'nav.christmasDesc': 'Μικτά και καθαρά για το δώρο',
+    'nav.vacation': 'Επίδομα άδειας',
+    'nav.vacationDesc': 'Αποδοχές καλοκαιρινής άδειας',
+    'nav.severance': 'Αποζημίωση απόλυσης',
+    'nav.severanceDesc': 'Εκτίμηση αποζημίωσης βάσει προϋπηρεσίας',
+    'nav.leaveBalance': 'Υπόλοιπο Αδειών',
+    'nav.leaveBalanceDesc': 'Ετήσια δικαιώματα και υπόλοιπο',
+
     // Calculator
-    'calc.title': 'Υπολογιστής Μισθού',
-    'calc.description': 'Υπολογίστε τον μισθό σας με βάση τα ελληνικά φορολογικά δεδομένα 2025',
+    'calc.title': 'Μισθοδοσία',
+    'calc.description': 'Υπολογίστε μικτά και καθαρά σε πραγματικό χρόνο',
     'calc.grossToNet': 'Μικτά → Καθαρά',
     'calc.netToGross': 'Καθαρά → Μικτά',
     'calc.grossSalary': 'Μηνιαίος Μικτός Μισθός (€)',
@@ -41,7 +61,66 @@ const translations: Record<Language, Record<string, string>> = {
     'calc.totalDeductions': 'Συνολικές Κρατήσεις',
     'calc.note14': '* Υπολογισμοί βάσει 14 μισθών (12 + Δώρα)',
     'calc.noteSolidarity': '* Εισφορά Αλληλεγγύης: Αναστολή για 2025',
-    
+
+    // Bonuses
+    'bonus.monthlyGross': 'Μηνιαίος μικτός μισθός (€)',
+    'bonus.hireDate': 'Πότε προσληφθήκατε στον τρέχοντα εργοδότη;',
+    'bonus.weekType': 'Τύπος εβδομάδας εργασίας',
+    'bonus.weekType5': 'Πενθήμερο',
+    'bonus.weekType6': 'Εξαήμερο',
+    'bonus.hiredCurrentYearQuestion': 'Η πρόσληψή σας έγινε μέσα στο τρέχον έτος;',
+    'bonus.employmentDays': 'Ημέρες απασχόλησης στην περίοδο',
+    'bonus.grossLabel': 'Μικτό ποσό δώρου',
+    'bonus.calculate': 'Υπολογισμός ποσού',
+    'bonus.gross': 'Μικτό ποσό',
+    'bonus.net': 'Καθαρό ποσό',
+    'bonus.note': '* Απλή εκτίμηση με βάση τις κρατήσεις ενός μηνιαίου ποσού.',
+    'bonus.prorationNote':
+      'Αν η πρόσληψή σας έγινε μέσα στη χρονιά, τα δώρα και το επίδομα άδειας υπολογίζονται μόνο για τις ημέρες που εργαστήκατε στην περίοδο.',
+    'bonus.easter.title': 'Δώρο Πάσχα',
+    'bonus.easter.description': 'Υπολογίστε γρήγορα το δώρο Πάσχα σε μικτά και καθαρά.',
+    'bonus.easter.period': 'Ημέρες απασχόλησης στην περίοδο 1/1–30/4',
+    'bonus.easter.disclaimer':
+      'Ο υπολογισμός είναι ενδεικτικός. Ελέγξτε τις ακριβείς αποδοχές σας με τον λογιστή σας.',
+    'bonus.christmas.title': 'Δώρο Χριστουγέννων',
+    'bonus.christmas.description': 'Εκτίμηση για την πληρωμή του δώρου Χριστουγέννων.',
+    'bonus.christmas.period': 'Ημέρες απασχόλησης στην περίοδο 1/5–31/12',
+    'bonus.christmas.disclaimer':
+      'Ο υπολογισμός είναι ενδεικτικός. Ελέγξτε τις ακριβείς αποδοχές σας με τον λογιστή σας.',
+    'bonus.vacation.title': 'Επίδομα άδειας',
+    'bonus.vacation.description': 'Υπολογισμός του επιδόματος καλοκαιρινής άδειας.',
+    'bonus.vacation.leaveDays': 'Ημέρες άδειας',
+    'bonus.vacation.allowanceGross': 'Μικτό επίδομα άδειας',
+    'bonus.vacation.payForDays': 'Αποδοχές άδειας (χωρίς πλαφόν)',
+    'bonus.vacation.disclaimer':
+      'Οι υπολογισμοί ισχύουν για τυπική πλήρη απασχόληση. Για ειδικές περιπτώσεις συμβουλευτείτε τον λογιστή σας.',
+
+    // Leave balance
+    'leaveBalance.title': 'Υπόλοιπο Αδειών',
+    'leaveBalance.description': 'Υπολογίστε τις ημέρες άδειας που δικαιούστε για το τρέχον έτος.',
+    'leaveBalance.currentYear': 'Τρέχον έτος',
+    'leaveBalance.takenDays': 'Ημέρες άδειας που έχετε ήδη πάρει φέτος',
+    'leaveBalance.entitled': 'Δικαιούστε συνολικά',
+    'leaveBalance.used': 'Έχετε ήδη χρησιμοποιήσει',
+    'leaveBalance.remaining': 'Υπόλοιπο αδείας',
+    'leaveBalance.days': 'ημέρες',
+    'leaveBalance.disclaimer':
+      'Οι ημέρες άδειας υπολογίζονται με βάση το γενικό πλαίσιο της εργατικής νομοθεσίας. Ειδικές ρυθμίσεις (κλαδικές συμβάσεις, ΣΣΕ, μερική απασχόληση) ενδέχεται να διαφοροποιούν το αποτέλεσμα. Συμβουλευτείτε τον λογιστή ή τον σύμβουλό σας.',
+
+    // Severance
+    'severance.title': 'Αποζημίωση Απόλυσης',
+    'severance.description': 'Υπολογισμός αποζημίωσης καταγγελίας χωρίς προειδοποίηση.',
+    'severance.monthlyGross': 'Μηνιαίος μικτός μισθός (€)',
+    'severance.years': 'Χρόνια προϋπηρεσίας στον ίδιο εργοδότη',
+    'severance.hint': 'Υπολογίζονται μόνο τα πλήρη έτη προϋπηρεσίας.',
+    'severance.had17YearsQuestion': 'Είχατε τουλάχιστον 17 χρόνια υπηρεσίας στις 12/11/2012;',
+    'severance.had17YearsHint': 'Ενεργοποιεί τον πρόσθετο πίνακα αποζημίωσης για παλαιούς εργαζόμενους.',
+    'severance.calculate': 'Υπολογισμός αποζημίωσης',
+    'severance.monthsAwarded': 'Μήνες αποζημίωσης',
+    'severance.grossAmount': 'Μικτό ποσό αποζημίωσης',
+    'severance.disclaimer':
+      'Ο υπολογισμός είναι ενδεικτικός και βασίζεται στο ισχύον νομικό πλαίσιο. Σε κάθε περίπτωση, επιβεβαιώστε τα ακριβή ποσά με τον λογιστή ή νομικό σας σύμβουλο.',
+
     // Employer
     'employer.title': 'Κόστος Εργοδότη',
     'employer.description': 'Υπολογίστε το συνολικό κόστος για τον εργοδότη ανά εργαζόμενο',
@@ -56,7 +135,7 @@ const translations: Record<Language, Record<string, string>> = {
     'employer.costPercent': '% Κόστους σε Εισφορές',
     'employer.netPercent': '% Κόστους σε Καθαρά',
     'employer.noteEmployer': '* Εργοδοτικές εισφορές ΕΦΚΑ: 21.79%',
-    
+
     // Yearly
     'yearly.title': 'Ετήσια Σύνοψη',
     'yearly.description': 'Καταχωρήστε τους μισθούς σας για πρόβλεψη φορολογικής δήλωσης',
@@ -86,25 +165,50 @@ const translations: Record<Language, Record<string, string>> = {
     'yearly.extraTax': 'Επιπλέον Φόρος',
     'yearly.noBonus': 'Αν δεν είχατε λάβει κανένα μπόνους, θα είχατε πληρώσει λιγότερο φόρο κατά',
     'yearly.refundIntro':
-    'Επιπλέον, με βάση τον σταθερό μισθό σας χωρίς μπόνους και σε σύγκριση με τις πραγματικές σας αποδοχές, προκύπτει διαφορά εισπραχθέντων φόρων ύψους',
+      'Επιπλέον, με βάση τον σταθερό μισθό σας χωρίς μπόνους και σε σύγκριση με τις πραγματικές σας αποδοχές, προκύπτει διαφορά εισπραχθέντων φόρων ύψους',
     'yearly.refundLikely':
       'η οποία πιθανότατα θα εμφανιστεί ως επιστροφή φόρου στην επόμενη φορολογική σας δήλωση.',
     'yearly.refundDisclaimer':
       '* Οι παραπάνω υπολογισμοί είναι ενδεικτικοί και δεν αποτελούν φορολογική ή λογιστική συμβουλή. Επιβεβαιώστε τα τελικά ποσά με τον λογιστή σας.',
+
+    // Common
+    'common.yes': 'Ναι',
+    'common.no': 'Όχι',
   },
   en: {
+    // App
     'app.title': 'Salary Calculator',
     'app.subtitle': 'Calculate your net salary, contributions and prepare your tax return',
-    'tabs.calculator': 'Calculator',
-    'tabs.calculator.short': 'Calc.',
+    'tabs.calculator': 'Payroll',
+    'tabs.calculator.short': 'Payroll',
     'tabs.employer': 'Employer',
     'tabs.employer.short': 'Empl.',
     'tabs.yearly': 'Yearly',
     'footer.disclaimer': 'Calculations are based on 2025 tax data. For official use, consult an accountant.',
-    
+
+    // Navigation
+    'nav.title': 'Tools menu',
+    'nav.subtitle': 'Quick access to every calculator',
+    'nav.payroll': 'Payroll',
+    'nav.payrollDesc': 'Gross and net side by side',
+    'nav.yearly': 'Yearly summary',
+    'nav.yearlyDesc': 'Predict your tax return',
+    'nav.employer': 'Employer cost',
+    'nav.employerDesc': 'Total cost and contributions',
+    'nav.easter': 'Easter bonus',
+    'nav.easterDesc': 'Seasonal bonus estimation',
+    'nav.christmas': 'Christmas bonus',
+    'nav.christmasDesc': 'Gross and net for the holiday gift',
+    'nav.vacation': 'Vacation allowance',
+    'nav.vacationDesc': 'Summer leave allowance',
+    'nav.severance': 'Severance',
+    'nav.severanceDesc': 'Estimate based on service years',
+    'nav.leaveBalance': 'Leave balance',
+    'nav.leaveBalanceDesc': 'Annual entitlement and remaining days',
+
     // Calculator
-    'calc.title': 'Salary Calculator',
-    'calc.description': 'Calculate your salary based on Greek tax data 2025',
+    'calc.title': 'Payroll',
+    'calc.description': 'Compare gross and net in real time',
     'calc.grossToNet': 'Gross → Net',
     'calc.netToGross': 'Net → Gross',
     'calc.grossSalary': 'Monthly Gross Salary (€)',
@@ -124,7 +228,66 @@ const translations: Record<Language, Record<string, string>> = {
     'calc.totalDeductions': 'Total Deductions',
     'calc.note14': '* Calculations based on 14 salaries (12 + Bonuses)',
     'calc.noteSolidarity': '* Solidarity Contribution: Suspended for 2025',
-    
+
+    // Bonuses
+    'bonus.monthlyGross': 'Monthly gross salary (€)',
+    'bonus.hireDate': 'When were you hired by your current employer?',
+    'bonus.weekType': 'Working week type',
+    'bonus.weekType5': '5-day week',
+    'bonus.weekType6': '6-day week',
+    'bonus.hiredCurrentYearQuestion': 'Were you hired within the current year?',
+    'bonus.employmentDays': 'Employment days in the legal period',
+    'bonus.grossLabel': 'Gross bonus amount',
+    'bonus.calculate': 'Calculate amount',
+    'bonus.gross': 'Gross amount',
+    'bonus.net': 'Net amount',
+    'bonus.note': '* Simple estimate based on monthly deductions.',
+    'bonus.prorationNote':
+      'If you joined mid-year, Easter/Christmas bonuses and vacation allowance are prorated to the days you actually worked in the legal period.',
+    'bonus.easter.title': 'Easter Bonus',
+    'bonus.easter.description': 'Quickly estimate Easter bonus in gross and net.',
+    'bonus.easter.period': 'Employment days between Jan 1 and Apr 30',
+    'bonus.easter.disclaimer':
+      'This calculation is indicative only. Confirm your final entitlements with your accountant.',
+    'bonus.christmas.title': 'Christmas Bonus',
+    'bonus.christmas.description': 'Estimation for the Christmas gift payment.',
+    'bonus.christmas.period': 'Employment days between May 1 and Dec 31',
+    'bonus.christmas.disclaimer':
+      'This calculation is indicative only. Confirm your final entitlements with your accountant.',
+    'bonus.vacation.title': 'Vacation Allowance',
+    'bonus.vacation.description': 'Calculate the summer vacation allowance.',
+    'bonus.vacation.leaveDays': 'Leave days',
+    'bonus.vacation.allowanceGross': 'Gross vacation allowance',
+    'bonus.vacation.payForDays': 'Vacation pay (before cap)',
+    'bonus.vacation.disclaimer':
+      'These calculations assume standard full-time employment. For special cases, confirm with your accountant.',
+
+    // Leave balance
+    'leaveBalance.title': 'Leave balance',
+    'leaveBalance.description': 'Calculate your annual leave entitlement for the current year.',
+    'leaveBalance.currentYear': 'Current year',
+    'leaveBalance.takenDays': 'Leave days you have already taken this year',
+    'leaveBalance.entitled': 'Total entitlement',
+    'leaveBalance.used': 'Already used',
+    'leaveBalance.remaining': 'Remaining leave',
+    'leaveBalance.days': 'days',
+    'leaveBalance.disclaimer':
+      'Leave days are calculated based on the general labour law framework. Sector agreements or part-time arrangements may change the result. Please consult your accountant or advisor.',
+
+    // Severance
+    'severance.title': 'Severance Pay',
+    'severance.description': 'Calculation for termination without prior notice.',
+    'severance.monthlyGross': 'Monthly gross salary (€)',
+    'severance.years': 'Years of service with the same employer',
+    'severance.hint': 'Only full completed years of service are counted.',
+    'severance.had17YearsQuestion': 'Did you have at least 17 years of service on 12/11/2012?',
+    'severance.had17YearsHint': 'Enables the additional severance table for long-serving employees.',
+    'severance.calculate': 'Calculate severance',
+    'severance.monthsAwarded': 'Severance months owed',
+    'severance.grossAmount': 'Gross severance amount',
+    'severance.disclaimer':
+      'This calculation is indicative and based on current legal guidelines. Always confirm exact amounts with your accountant or legal advisor.',
+
     // Employer
     'employer.title': 'Employer Cost',
     'employer.description': 'Calculate the total employer cost per employee',
@@ -139,7 +302,7 @@ const translations: Record<Language, Record<string, string>> = {
     'employer.costPercent': '% of Cost in Contributions',
     'employer.netPercent': '% of Cost as Net',
     'employer.noteEmployer': '* Employer EFKA contributions: 21.79%',
-    
+
     // Yearly
     'yearly.title': 'Yearly Summary',
     'yearly.description': 'Enter your salaries for tax return prediction',
@@ -169,11 +332,15 @@ const translations: Record<Language, Record<string, string>> = {
     'yearly.extraTax': 'Extra Tax',
     'yearly.noBonus': 'If you had not received any bonus, you would have paid less tax by',
     'yearly.refundIntro':
-    'In addition, based on your standard salary without bonuses and compared to your actual earnings, there is a difference in taxes paid of',
+      'In addition, based on your standard salary without bonuses and compared to your actual earnings, there is a difference in taxes paid of',
     'yearly.refundLikely':
       'which is likely to appear as a tax refund in your next tax return.',
     'yearly.refundDisclaimer':
       '* The above calculations are indicative and do not constitute tax or accounting advice. Please confirm the final amounts with your accountant.',
+
+    // Common
+    'common.yes': 'Yes',
+    'common.no': 'No',
   },
 };
 
