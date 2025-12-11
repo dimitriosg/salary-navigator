@@ -258,7 +258,33 @@ export function calculateYearlySummary(
 ): YearlySummary {
   const totalRegularGross = salaries.reduce((sum, salary) => sum + salary.gross, 0);
   const monthsCount = salaries.length || 1;
-  const baseMonthlyGross = totalRegularGross / monthsCount;
+
+  // Determine a representative base salary for bonuses by using the most frequent
+  // monthly value (mode). This avoids inflating bonuses when occasional months
+  // include overtime or other extras. In case of a tie, the lowest repeated value
+  // is chosen to stay conservative.
+  const occurrences = salaries.reduce((map, { gross }) => {
+    const roundedGross = roundTo2(gross);
+    map.set(roundedGross, (map.get(roundedGross) || 0) + 1);
+    return map;
+  }, new Map<number, number>());
+
+  let baseMonthlyGross = totalRegularGross / monthsCount;
+  if (occurrences.size > 0) {
+    let maxCount = 0;
+    let candidateGrosses: number[] = [];
+
+    occurrences.forEach((count, gross) => {
+      if (count > maxCount) {
+        maxCount = count;
+        candidateGrosses = [gross];
+      } else if (count === maxCount) {
+        candidateGrosses.push(gross);
+      }
+    });
+
+    baseMonthlyGross = Math.min(...candidateGrosses);
+  }
   const referenceYear = options?.referenceYear ?? new Date().getFullYear();
   const leaveDays = options?.leaveDays ?? 20;
 
