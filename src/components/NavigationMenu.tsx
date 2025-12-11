@@ -4,12 +4,12 @@ import { useLanguage } from '@/contexts/LanguageContext';
 
 const links = [
   { to: '/', icon: Calculator, labelKey: 'nav.payroll', descriptionKey: 'nav.payrollDesc' },
-  { to: '/employer', icon: Landmark, labelKey: 'nav.employer', descriptionKey: 'nav.employerDesc' },
   { to: '/easter-bonus', icon: Gift, labelKey: 'nav.easter', descriptionKey: 'nav.easterDesc' },
   { to: '/christmas-bonus', icon: Gift, labelKey: 'nav.christmas', descriptionKey: 'nav.christmasDesc' },
   { to: '/vacation-allowance', icon: Umbrella, labelKey: 'nav.vacation', descriptionKey: 'nav.vacationDesc' },
   { to: '/severance', icon: Briefcase, labelKey: 'nav.severance', descriptionKey: 'nav.severanceDesc' },
   { to: '/leave-balance', icon: CalendarCheck, labelKey: 'nav.leaveBalance', descriptionKey: 'nav.leaveBalanceDesc' },
+  { to: '/employer', icon: Landmark, labelKey: 'nav.employer', descriptionKey: 'nav.employerDesc' },
   { to: '/yearly', icon: CalendarDays, labelKey: 'nav.yearly', descriptionKey: 'nav.yearlyDesc', beta: true },
 ];
 
