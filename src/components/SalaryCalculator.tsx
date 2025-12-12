@@ -31,31 +31,19 @@ export function SalaryCalculator() {
   const handleGrossChange = (value: string) => {
     setActiveSide('gross');
     setGrossInput(value);
-<<<<<<< HEAD
-    const gross = parseFloat(value);
-    if (!isNaN(gross) && gross > 0) {
+    const gross = parseNumericExpression(value);
+    if (gross !== null && gross > 0) {
       recalcFromGross(gross);
     }
-=======
->>>>>>> codex/check-calculations-for-bonuses
   };
 
   const handleNetChange = (value: string) => {
     setActiveSide('net');
     setNetInput(value);
-<<<<<<< HEAD
-    const net = parseFloat(value);
-    if (!isNaN(net) && net > 0) {
+    const net = parseNumericExpression(value);
+    if (net !== null && net > 0) {
       recalcFromNet(net);
     }
-  };
-
-  const handleGrossToNet = () => {
-    const gross = parseFloat(grossInput);
-    if (!isNaN(gross) && gross > 0) {
-      setActiveSide('gross');
-      recalcFromGross(gross);
-=======
   };
 
   const handleGrossToNet = () => {
@@ -67,20 +55,10 @@ export function SalaryCalculator() {
       recalcFromGross(gross);
     } else if (breakdown) {
       setGrossInput(breakdown.grossSalary.toFixed(2));
->>>>>>> codex/check-calculations-for-bonuses
     }
   };
 
   const handleNetToGross = () => {
-<<<<<<< HEAD
-    const net = parseFloat(netInput);
-    if (!isNaN(net) && net > 0) {
-      setActiveSide('net');
-      recalcFromNet(net);
-    }
-  };
-
-=======
     const net = parseNumericExpression(netInput);
     if (net !== null && net > 0) {
       setActiveSide('net');
@@ -109,8 +87,6 @@ export function SalaryCalculator() {
       recalcFromNet(net);
     }
   };
-
->>>>>>> codex/check-calculations-for-bonuses
   const renderBreakdown = (result: SalaryBreakdown, isGrossToNet: boolean) => (
     <div className="mt-6 space-y-4 animate-slide-up">
       <div className="grid grid-cols-2 gap-4">
@@ -170,12 +146,12 @@ export function SalaryCalculator() {
   useEffect(() => {
     if (!breakdown) return;
 
-    const gross = parseFloat(grossInput);
-    const net = parseFloat(netInput);
+    const gross = parseNumericExpression(grossInput);
+    const net = parseNumericExpression(netInput);
 
-    if (activeSide === 'gross' && !isNaN(gross) && gross > 0) {
+    if (activeSide === 'gross' && gross !== null && gross > 0) {
       recalcFromGross(gross);
-    } else if (activeSide === 'net' && !isNaN(net) && net > 0) {
+    } else if (activeSide === 'net' && net !== null && net > 0) {
       recalcFromNet(net);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -229,13 +205,6 @@ export function SalaryCalculator() {
                 <Label htmlFor="gross">{t('calc.grossSalary')}</Label>
                 <Input
                   id="gross"
-<<<<<<< HEAD
-                  type="number"
-                  placeholder={language === 'el' ? 'π.χ. 1500' : 'e.g. 1500'}
-                  value={grossInput}
-                  onChange={(e) => handleGrossChange(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleGrossToNet()}
-=======
                   type="text"
                   placeholder={language === 'el' ? 'π.χ. 1500' : 'e.g. 1500'}
                   value={grossInput}
@@ -247,7 +216,6 @@ export function SalaryCalculator() {
                       handleGrossToNet();
                     }
                   }}
->>>>>>> codex/check-calculations-for-bonuses
                   className="text-lg h-12"
                 />
               </div>
@@ -269,13 +237,6 @@ export function SalaryCalculator() {
                 <Label htmlFor="net">{t('calc.netSalary')}</Label>
                 <Input
                   id="net"
-<<<<<<< HEAD
-                  type="number"
-                  placeholder={language === 'el' ? 'π.χ. 1200' : 'e.g. 1200'}
-                  value={netInput}
-                  onChange={(e) => handleNetChange(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleNetToGross()}
-=======
                   type="text"
                   placeholder={language === 'el' ? 'π.χ. 1200' : 'e.g. 1200'}
                   value={netInput}
@@ -287,7 +248,6 @@ export function SalaryCalculator() {
                       handleNetToGross();
                     }
                   }}
->>>>>>> codex/check-calculations-for-bonuses
                   className="text-lg h-12"
                 />
               </div>
