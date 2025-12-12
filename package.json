@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "start": "serve -s dist -l 4173",
+    "prestart": "npm run build",
+    "start": "vite preview --host --port 4173",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
     "preview": "vite preview"
