@@ -347,13 +347,10 @@ const translations: Record<Language, Record<string, string>> = {
       'which is likely to appear as a tax refund in your next tax return.',
     'yearly.refundDisclaimer':
       '* The above calculations are indicative and do not constitute tax or accounting advice. Please confirm the final amounts with your accountant.',
-<<<<<<< HEAD
-=======
     'yearly.bonusSectionTitle': 'Bonuses & Vacation Allowance',
     'yearly.easterBonus': 'Easter bonus',
     'yearly.christmasBonus': 'Christmas bonus',
     'yearly.vacationAllowance': 'Vacation allowance',
->>>>>>> codex/check-calculations-for-bonuses
 
     // Common
     'common.yes': 'Yes',
