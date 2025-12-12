@@ -56,7 +56,7 @@ function getTaxCredit(annualTaxableIncome: number, children: number = 0): number
   return Math.max(0, baseCredit - reduction);
 }
 
-function calculateIncomeTax(annualTaxableIncome: number, children: number = 0): number {
+export function calculateIncomeTax(annualTaxableIncome: number, children: number = 0): number {
   let tax = 0;
   let previousLimit = 0;
 
@@ -77,6 +77,41 @@ function calculateIncomeTax(annualTaxableIncome: number, children: number = 0): 
   tax = Math.max(0, tax - credit);
 
   return tax;
+}
+
+export function calculateBonusWithholdings(
+  baseMonthlyGross: number,
+  bonusGross: number,
+  months: number = 14,
+  children: number = 0
+): SalaryBreakdown {
+  const baseAnnualGross = baseMonthlyGross * months;
+  const baseAnnualEfkaEmployee = baseAnnualGross * EFKA_EMPLOYEE_RATE;
+  const baseAnnualEfkaEmployer = baseAnnualGross * EFKA_EMPLOYER_RATE;
+  const baseAnnualTaxableIncome = baseAnnualGross - baseAnnualEfkaEmployee;
+  const baseAnnualIncomeTax = calculateIncomeTax(baseAnnualTaxableIncome, children);
+
+  const bonusEfkaEmployee = bonusGross * EFKA_EMPLOYEE_RATE;
+  const bonusEfkaEmployer = bonusGross * EFKA_EMPLOYER_RATE;
+
+  const totalAnnualGross = baseAnnualGross + bonusGross;
+  const totalAnnualEfkaEmployee = baseAnnualEfkaEmployee + bonusEfkaEmployee;
+  const totalAnnualEfkaEmployer = baseAnnualEfkaEmployer + bonusEfkaEmployer;
+  const totalAnnualTaxableIncome = totalAnnualGross - totalAnnualEfkaEmployee;
+  const totalAnnualIncomeTax = calculateIncomeTax(totalAnnualTaxableIncome, children);
+
+  const bonusIncomeTax = totalAnnualIncomeTax - baseAnnualIncomeTax;
+  const totalDeductions = bonusEfkaEmployee + bonusIncomeTax;
+
+  return {
+    grossSalary: bonusGross,
+    netSalary: bonusGross - totalDeductions,
+    efkaEmployee: bonusEfkaEmployee,
+    efkaEmployer: totalAnnualEfkaEmployer - baseAnnualEfkaEmployer,
+    incomeTax: bonusIncomeTax,
+    solidarityTax: 0,
+    totalDeductions,
+  };
 }
 
 export function calculateGrossToNet(monthlyGross: number, months: number = 14, children: number = 0): SalaryBreakdown {

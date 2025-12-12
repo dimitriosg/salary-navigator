@@ -5,7 +5,7 @@ import { useEmployment } from '@/contexts/EmploymentContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { differenceInDaysInclusive, getDaysOverlap } from '@/lib/dateUtils';
 import { calculateAnnualLeaveDays } from '@/lib/leaveCalculations';
-import { calculateGrossToNet, formatCurrency, type SalaryBreakdown } from '@/lib/salaryCalculations';
+import { calculateBonusWithholdings, formatCurrency, type SalaryBreakdown } from '@/lib/salaryCalculations';
 import { parseNumericExpression } from '@/lib/numberUtils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -94,7 +94,8 @@ export function BonusCalculator({ type }: BonusCalculatorProps) {
     const ratioWorked = employmentDays / totalPeriodDays;
     const fullBonus = gross * ratio;
     const bonusGross = fullBonus * ratioWorked;
-    const breakdown = calculateGrossToNet(bonusGross, 1);
+
+    const breakdown = calculateBonusWithholdings(gross, bonusGross, 14);
     setResult({ gross: bonusGross, breakdown, employmentDays, totalPeriodDays });
   };
 
