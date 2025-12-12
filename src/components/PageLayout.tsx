@@ -33,6 +33,9 @@ export function PageLayout({ title, subtitle, icon, children }: PageLayoutProps)
       </header>
 
       <main className="max-w-6xl mx-auto px-4 -mt-8 pb-16">
+        <div className="mb-6 lg:hidden">
+          <NavigationMenu variant="mobile" />
+        </div>
         <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_320px]">
           <div className="space-y-6">{children}</div>
           <NavigationMenu />
