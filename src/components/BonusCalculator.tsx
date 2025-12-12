@@ -94,7 +94,22 @@ export function BonusCalculator({ type }: BonusCalculatorProps) {
     const ratioWorked = employmentDays / totalPeriodDays;
     const fullBonus = gross * ratio;
     const bonusGross = fullBonus * ratioWorked;
-    const breakdown = calculateGrossToNet(bonusGross, 1);
+
+    // Apply the same withholding profile as a normal salary payment by scaling
+    // the standard monthly deductions to the bonus amount. This avoids
+    // under-withholding income tax that happens when treating the gift as an
+    // isolated single-month payment.
+    const baseBreakdown = calculateGrossToNet(gross, 14);
+    const bonusMultiplier = bonusGross / gross;
+    const breakdown: SalaryBreakdown = {
+      grossSalary: bonusGross,
+      netSalary: baseBreakdown.netSalary * bonusMultiplier,
+      efkaEmployee: baseBreakdown.efkaEmployee * bonusMultiplier,
+      efkaEmployer: baseBreakdown.efkaEmployer * bonusMultiplier,
+      incomeTax: baseBreakdown.incomeTax * bonusMultiplier,
+      solidarityTax: baseBreakdown.solidarityTax * bonusMultiplier,
+      totalDeductions: baseBreakdown.totalDeductions * bonusMultiplier,
+    };
     setResult({ gross: bonusGross, breakdown, employmentDays, totalPeriodDays });
   };
 
