@@ -173,13 +173,10 @@ const translations: Record<Language, Record<string, string>> = {
       'η οποία πιθανότατα θα εμφανιστεί ως επιστροφή φόρου στην επόμενη φορολογική σας δήλωση.',
     'yearly.refundDisclaimer':
       '* Οι παραπάνω υπολογισμοί είναι ενδεικτικοί και δεν αποτελούν φορολογική ή λογιστική συμβουλή. Επιβεβαιώστε τα τελικά ποσά με τον λογιστή σας.',
-<<<<<<< HEAD
-=======
     'yearly.bonusSectionTitle': 'Δώρα & Επίδομα Άδειας',
     'yearly.easterBonus': 'Δώρο Πάσχα',
     'yearly.christmasBonus': 'Δώρο Χριστουγέννων',
     'yearly.vacationAllowance': 'Επίδομα άδειας',
->>>>>>> codex/check-calculations-for-bonuses
 
     // Common
     'common.yes': 'Ναι',
