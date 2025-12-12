@@ -38,6 +38,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.severanceDesc': 'Εκτίμηση αποζημίωσης βάσει προϋπηρεσίας',
     'nav.leaveBalance': 'Υπόλοιπο Αδειών',
     'nav.leaveBalanceDesc': 'Ετήσια δικαιώματα και υπόλοιπο',
+    'nav.menuButton': 'Μενού',
 
     // Calculator
     'calc.title': 'Μισθοδοσία',
@@ -181,6 +182,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Common
     'common.yes': 'Ναι',
     'common.no': 'Όχι',
+    'common.open': 'Άνοιγμα',
+    'common.close': 'Κλείσιμο',
   },
   en: {
     // App
@@ -212,6 +215,7 @@ const translations: Record<Language, Record<string, string>> = {
     'nav.severanceDesc': 'Estimate based on service years',
     'nav.leaveBalance': 'Leave balance',
     'nav.leaveBalanceDesc': 'Annual entitlement and remaining days',
+    'nav.menuButton': 'Menu',
 
     // Calculator
     'calc.title': 'Payroll',
@@ -355,6 +359,8 @@ const translations: Record<Language, Record<string, string>> = {
     // Common
     'common.yes': 'Yes',
     'common.no': 'No',
+    'common.open': 'Open',
+    'common.close': 'Close',
   },
 };
 
