@@ -5,7 +5,7 @@ import { useEmployment } from '@/contexts/EmploymentContext';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { differenceInDaysInclusive, getDaysOverlap } from '@/lib/dateUtils';
 import { calculateAnnualLeaveDays } from '@/lib/leaveCalculations';
-import { calculateGrossToNet, formatCurrency, type SalaryBreakdown } from '@/lib/salaryCalculations';
+import { calculateBonusWithholdings, formatCurrency, type SalaryBreakdown } from '@/lib/salaryCalculations';
 import { parseNumericExpression } from '@/lib/numberUtils';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -95,21 +95,7 @@ export function BonusCalculator({ type }: BonusCalculatorProps) {
     const fullBonus = gross * ratio;
     const bonusGross = fullBonus * ratioWorked;
 
-    // Apply the same withholding profile as a normal salary payment by scaling
-    // the standard monthly deductions to the bonus amount. This avoids
-    // under-withholding income tax that happens when treating the gift as an
-    // isolated single-month payment.
-    const baseBreakdown = calculateGrossToNet(gross, 14);
-    const bonusMultiplier = bonusGross / gross;
-    const breakdown: SalaryBreakdown = {
-      grossSalary: bonusGross,
-      netSalary: baseBreakdown.netSalary * bonusMultiplier,
-      efkaEmployee: baseBreakdown.efkaEmployee * bonusMultiplier,
-      efkaEmployer: baseBreakdown.efkaEmployer * bonusMultiplier,
-      incomeTax: baseBreakdown.incomeTax * bonusMultiplier,
-      solidarityTax: baseBreakdown.solidarityTax * bonusMultiplier,
-      totalDeductions: baseBreakdown.totalDeductions * bonusMultiplier,
-    };
+    const breakdown = calculateBonusWithholdings(gross, bonusGross, 14);
     setResult({ gross: bonusGross, breakdown, employmentDays, totalPeriodDays });
   };
 
