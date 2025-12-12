@@ -12,7 +12,6 @@ export function parseNumericExpression(value: string): number | null {
 
   if (safePattern.test(expr)) {
     try {
-      // eslint-disable-next-line no-new-func
       const result = Function(`"use strict"; return (${expr});`)();
       if (typeof result === 'number' && Number.isFinite(result)) {
         return finalize(result);
